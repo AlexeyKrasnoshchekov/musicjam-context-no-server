@@ -1,12 +1,13 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../../store/context";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 
 export default function Login() {
-  const { token, auth, getToken } = useContext(context);
+  const { getToken, setAuthUrl } = useContext(context);
+  const [authUrlIsSet, setAuthUrlIsSet] = useState(false);
 
   const initialRender = useRef(true);
-  let history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     if (initialRender.current) {
@@ -14,14 +15,14 @@ export default function Login() {
       return;
     }
 
-    token === "" && getToken();
-  }, []);
+    if (location.hash) {
+      getToken();
+    }
+  }, [authUrlIsSet]);
 
-  const handleLogin = () => {
-    
-    
-    token !== "" && auth();
-    history.push('/home');
+  const handleLogin = async () => {
+    await setAuthUrl();
+    setAuthUrlIsSet(true);
   };
 
   return (
@@ -30,8 +31,8 @@ export default function Login() {
         src="https://getheavy.com/wp-content/uploads/2019/12/spotify2019-830x350.jpg"
         alt="Spotify-Logo"
       />
-      {/* <Link style={{ color: "lightcyan" }} to={`/home`}> */}
-        <button onClick={handleLogin}>LOGIN WITH SPOTIFY</button>
+      {/* <Link to={`/home`}> */}
+      <button onClick={handleLogin}>LOGIN WITH SPOTIFY</button>
       {/* </Link> */}
     </div>
   );

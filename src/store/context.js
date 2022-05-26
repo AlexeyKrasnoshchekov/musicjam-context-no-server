@@ -1,10 +1,10 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { createContext } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
-import { getAccessToken } from "../util/Spotify";
+import { getAccessToken, setUrl } from "../util/Spotify";
 import reducer from "./reducer";
 import {
-  SET_TOKEN,
+  // SET_TOKEN,
   SET_TOKEN_IS_SET,
   SET_PLAYLISTS,
   SET_PLAYLIST,
@@ -28,20 +28,26 @@ const State = (props) => {
 
   const spotifyApi = new SpotifyWebApi();
 
-  const setToken = (token) => dispatch({ type: SET_TOKEN, payload: token });
+  // const setToken = (token) => dispatch({ type: SET_TOKEN, payload: token });
   const setTokenIsSet = (bool) =>
     dispatch({ type: SET_TOKEN_IS_SET, payload: bool });
 
-  const getToken = () => {
-    const token = getAccessToken();
+  const setAuthUrl = () => {
+    setUrl();
+  };
+  const getToken = async () => {
+    const token = await getAccessToken();
     console.log("token", token);
-    setToken(token);
+    await spotifyApi.setAccessToken(token);
+    token !== "" && setTokenIsSet(true);
+    // setToken(token);
+    // console.log("token2", state.token);
   };
-  const auth = () => {
-    console.log('first')
-    spotifyApi.setAccessToken(state.token);
-    setTokenIsSet(true);
-  };
+  // const auth = () => {
+  //   console.log('first')
+  //   spotifyApi.setAccessToken(state.token);
+  //   setTokenIsSet(true);
+  // };
 
   const logout = () => {
     console.log("222333");
@@ -119,7 +125,8 @@ const State = (props) => {
         user: state.user,
         searchResult: state.searchResult,
         getToken,
-        auth,
+        setAuthUrl,
+        // auth,
         logout,
         getPlaylists,
         getPlaylist,

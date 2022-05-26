@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { context } from "../../store/context";
 import { Playlist as PlaylistType } from "../../types/types";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Playlist from "../Playlist/Playlist";
 // import Playlist from "../Playlist/Playlist";
 
@@ -51,7 +52,7 @@ export default function Playlists() {
             );
           })}
       </div>
-      {/* {clicked && <Playlist />} */}
+      {clicked && <Playlist />}
     </>
   );
 }

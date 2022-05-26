@@ -36,11 +36,11 @@ export default function Playlist() {
   console.log("222", playlist);
   return (
     <div>
-      {playlist.images && (
+      {/* {playlist.images && ( */}
         <div style={{ outline: "2px solid red" }}>
           <div>{playlist.name}</div>
           <div>{playlist.owner.display_name}</div>
-          {playlist.images.length !== 0 && (
+          {/* {playlist.images.length !== 0 && (
             <div
               style={{
                 backgroundImage: `url(${playlist.images[imageIndex].url})`,
@@ -52,7 +52,7 @@ export default function Playlist() {
 
               <div style={{fontSize:'18px', outline:'2px solid red'}} onClick={handleNextButton}>{">"}</div>
             </div>
-          )}
+          )} */}
           <h3>Tracks</h3>
           <div>
             {playlist.tracks.items.length !== 0 && (
@@ -72,7 +72,7 @@ export default function Playlist() {
             )}
           </div>
         </div>
-      )}
+      {/* )} */}
     </div>
   );
 }
