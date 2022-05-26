@@ -1,0 +1,8 @@
+.sidebar {
+    outline: 1px solid red;
+    width: 25%;
+    height: 94%;
+    margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

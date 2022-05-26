@@ -1,0 +1,19 @@
+.header {
+    display: flex;
+    width: 100%;
+    height: 5%;
+    justify-content: space-between;
+    border-bottom: 1px solid blue;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+.log {
+    display: flex;
+    
+}
+
+.log-title {
+    margin-right: 0.5rem;
+}

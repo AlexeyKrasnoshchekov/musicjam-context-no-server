@@ -1,0 +1,12 @@
+.home {
+    height: 100%;
+    /* outline: 1px solid wheat; */
+    margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-image: url('./background_photo_desktop.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 0 5% 0% 5%;
+}
