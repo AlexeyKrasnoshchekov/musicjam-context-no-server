@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { context } from "../../store/context";
 import { Playlist as PlaylistType } from "../../types/types";
 // import { Link } from "react-router-dom";
@@ -10,8 +10,9 @@ export default function Playlists() {
   const { playlists, getPlaylists, getPlaylist } = useContext(context);
 
   const initialRender = useRef(true);
+  const history = useHistory();
 
-  const [clicked, setClicked] = useState<boolean>(false);
+  // const [clicked, setClicked] = useState<boolean>(false);
 
   useEffect(() => {
     if (initialRender.current) {
@@ -25,7 +26,8 @@ export default function Playlists() {
   const handlePlaylistClick = async (id: string) => {
     console.log("111222");
     await getPlaylist(id);
-    setClicked(true);
+    history.push("/playlist");
+    // setClicked(true);
   };
 
   // const playlists = useAppSelector(selectPlaylists);
@@ -40,19 +42,19 @@ export default function Playlists() {
           playlists.map((playlist: PlaylistType, index: number) => {
             return (
               <div key={index} onClick={() => handlePlaylistClick(playlist.id)} className="minicartButtonsContainer">
-                <Link
+                {/* <Link
                   style={{ color: "lightcyan" }}
                   to={`/playlist`}
-                >
+                > */}
                   {playlist.tracks.total !== 0 && (
                     <div>{`${playlist.name} (${playlist.tracks.total})`}</div>
                   )}
-                </Link>
+                {/* </Link> */}
               </div>
             );
           })}
       </div>
-      {clicked && <Playlist />}
+      {/* {clicked && <Playlist />} */}
     </>
   );
 }

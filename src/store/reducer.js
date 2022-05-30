@@ -1,5 +1,6 @@
 export const SET_TOKEN = "SET_TOKEN";
 export const SET_TOKEN_IS_SET = "SET_TOKEN_IS_SET";
+export const SET_URL_IS_SET = "SET_URL_IS_SET";
 export const SET_PLAYLISTS = "SET_PLAYLISTS";
 export const SET_PLAYLIST = "SET_PLAYLIST";
 export const SET_USER = "SET_USER";
@@ -12,6 +13,7 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
   export default (state, action) => {
     switch (action.type) {
       case SET_TOKEN:
+        
         return {
           ...state,
           token: action.payload,
@@ -24,9 +26,16 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
         };
   
       case SET_TOKEN_IS_SET:
+        
         return {
           ...state,
           tokenIsSet: action.payload,
+        };
+      case SET_URL_IS_SET:
+        
+        return {
+          ...state,
+          urlIsSet: action.payload,
         };
       case SET_PLAYLIST:
         return {
@@ -34,6 +43,7 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
           playlist: action.payload,
         };
       case SET_SEARCH_RESULT:
+        console.log('action.payload222');
         return {
           ...state,
           searchResult: action.payload,

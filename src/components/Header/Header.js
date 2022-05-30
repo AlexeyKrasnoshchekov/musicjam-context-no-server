@@ -3,12 +3,14 @@ import React, { useContext, useState } from "react";
 import "./header.css";
 import { FiLogOut } from "react-icons/fi";
 import { context } from "../../store/context";
+import { useHistory } from "react-router-dom";
 // import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 // import { loadSearch, selectSearch } from "./searchSlice";
 
 function Header() {
   // const dispatch = useAppDispatch();
   // const user = useAppSelector(selectOwner);
+  const history = useHistory();
   const [searchTerm, setSearchTerm] = useState("");
   const {
     user,
@@ -22,6 +24,7 @@ function Header() {
   const handleSearch = async (e) => {
     e.preventDefault();
     search(searchTerm);
+    history.push("/search");
     // await dispatch(loadSearch(searchTerm));
     // const data = await search(
     //   searchTerm,
@@ -29,6 +32,10 @@ function Header() {
     //   {limit: 5, market: "RU"}
     // )
     // console.log("data", data);
+  };
+  const handleLogout = async () => {
+    logout();
+    history.push("/");
   };
 
   // const searchData = useAppSelector(selectSearch);
@@ -42,7 +49,7 @@ function Header() {
       <div>App</div>
       <div className="log">
         <div className="log-title">{`Logged in as ${user}`}</div>
-        <div onClick={logout}>
+        <div onClick={handleLogout}>
           <FiLogOut />
         </div>
       </div>

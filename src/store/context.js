@@ -4,8 +4,9 @@ import SpotifyWebApi from "spotify-web-api-js";
 import { getAccessToken, setUrl } from "../util/Spotify";
 import reducer from "./reducer";
 import {
-  // SET_TOKEN,
+  SET_TOKEN,
   SET_TOKEN_IS_SET,
+  SET_URL_IS_SET,
   SET_PLAYLISTS,
   SET_PLAYLIST,
   SET_USER,
@@ -18,6 +19,7 @@ const State = (props) => {
   const initialState = {
     token: "",
     tokenIsSet: false,
+    urlIsSet: false,
     playlists: [],
     playlist: null,
     searchResult: null,
@@ -28,26 +30,25 @@ const State = (props) => {
 
   const spotifyApi = new SpotifyWebApi();
 
-  // const setToken = (token) => dispatch({ type: SET_TOKEN, payload: token });
+  const setToken = (token) => {
+    console.log('token777', token);
+    dispatch({ type: SET_TOKEN, payload: token });
+  };
   const setTokenIsSet = (bool) =>
     dispatch({ type: SET_TOKEN_IS_SET, payload: bool });
 
-  const setAuthUrl = () => {
-    setUrl();
-  };
-  const getToken = async () => {
-    const token = await getAccessToken();
-    console.log("token", token);
-    await spotifyApi.setAccessToken(token);
-    token !== "" && setTokenIsSet(true);
-    // setToken(token);
-    // console.log("token2", state.token);
-  };
-  // const auth = () => {
-  //   console.log('first')
-  //   spotifyApi.setAccessToken(state.token);
-  //   setTokenIsSet(true);
+  // const getToken = async () => {
+  //   const token = await getAccessToken();
+  //   console.log("token", token);
+  //   // await spotifyApi.setAccessToken(token);
+  //   // token !== "" && setTokenIsSet(true);
+  //   // setToken(token);
+  //   // console.log("token2", state.token);
   // };
+  const auth = () => {
+    console.log('auth', state.token);
+    spotifyApi.setAccessToken(state.token);
+  };
 
   const logout = () => {
     console.log("222333");
@@ -57,6 +58,8 @@ const State = (props) => {
   };
 
   const getPlaylists = async () => {
+    console.log('getPlaylists')
+
     try {
       let data = await spotifyApi.getUserPlaylists();
       console.log("data333", data);
@@ -110,6 +113,7 @@ const State = (props) => {
         type: SET_SEARCH_RESULT,
         payload: data,
       });
+      console.log("searchresl", state.searchResult);
     } catch (error) {
       console.log(error);
     }
@@ -124,12 +128,12 @@ const State = (props) => {
         playlist: state.playlist,
         user: state.user,
         searchResult: state.searchResult,
-        getToken,
-        setAuthUrl,
-        // auth,
+        setToken,        
+        auth,
         logout,
         getPlaylists,
         getPlaylist,
+        setTokenIsSet,
         search
       }}
     >

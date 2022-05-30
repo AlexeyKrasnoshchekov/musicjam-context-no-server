@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-// import SpotifyWebApi from "spotify-web-api-js";
+import SpotifyWebApi from "spotify-web-api-js";
 import Playlist from "../Playlist/Playlist";
 // import Playlist from "../Playlist/Playlist";
 // import SearchBar from "../SearchBar/SearchBar";
@@ -12,7 +12,10 @@ import Playlist from "../Playlist/Playlist";
 // import { loadPlaylists } from "../Playlists/playlistsSlice";
 import Login from "../Login/Login";
 import Container from "../Container/Container";
+// import { apiContext } from "../../store/apiContext";
 import { context } from "../../store/context";
+import Home from "../../pages/Home";
+import SearchResults from "../SearchResults/SearchResults";
 
 export default function App() {
   // const [accessToken, setAccessToken] = useState("");
@@ -67,17 +70,27 @@ export default function App() {
   //       console.error(err);
   //     }
   //   );
-  console.log('tokenIsSet', tokenIsSet)
+  const spotifyApi = new SpotifyWebApi();
+  // console.log("tokenIsSet", tokenIsSet);
   return (
-    
+    // <apiContext.Provider value={spotifyApi}>
     <Router>
-      <div className="App">{tokenIsSet ? <Container /> : <Login />}</div>
-
-      {/* <Switch>
-        <Route path="/playlist">
-          <Playlist />
+      <Switch>
+        <Route path={"/playlist"}>
+          <Container>
+            <Playlist />
+          </Container>
         </Route>
-      </Switch> */}
+        <Route path={"/search"}>
+          <Container>
+            <SearchResults />
+          </Container>
+        </Route>
+        <Route path={"/"}>
+          <div className="App">{tokenIsSet ? <Home /> : <Login />}</div>
+        </Route>
+      </Switch>
     </Router>
+    // </apiContext.Provider>
   );
 }
