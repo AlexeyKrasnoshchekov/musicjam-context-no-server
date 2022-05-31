@@ -1,5 +1,8 @@
 import React, { useContext, useState } from "react";
 import { context } from "../../store/context";
+import Album from "../Album/Album";
+import Artist from "../Artist/Artist";
+import Item from "../Item/Item";
 import Track from "../Track/Track";
 
 export default function SearchResults() {
@@ -9,52 +12,64 @@ export default function SearchResults() {
     <div>
       {searchResult && (
         <div>
-          {searchResult.albums.items.length !==0 && <div>
-            <div>albums</div>
+          {searchResult.albums.items.length !== 0 && (
             <div>
-              {searchResult.albums.items.map((album, index) => {
-                return (
-                  <div key={index}>
-                    <div>{album.name}</div>
-                    <div>{album.release_date}</div>
-                    <div>{album.total_tracks}</div>
-                  </div>
-                );
-              })}
+              <div>albums</div>
+              <div>
+                {searchResult.albums.items.map((album, index) => {
+                  return (
+                    <Item
+                      key={index}
+                      // date={item.added_at}
+                      name={album.name}
+                      releaseDate={album.release_date}
+                      tracksTotal={album.total_tracks}
+                      artist={album.artists[0].name}
+                      images={album.images}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>}
-          {searchResult.artists.items.length !==0 &&<div>
-            <div>artists</div>
+          )}
+          {searchResult.artists.items.length !== 0 && (
             <div>
-              {searchResult.artists.items.map((artist, index) => {
-                return (
-                  <div key={index}>
-                    <div>{artist.name}</div>
-                    <div>{artist.popularity}</div>
-                    <div>{artist.genres[0]}</div>
-                    {/* <div>{artist.images}</div> */}
-                  </div>
-                );
-              })}
+              <div>artists</div>
+              <div>
+                {searchResult.artists.items.map((artist, index) => {
+                  return (
+                    <Item
+                      key={index}
+                      // date={item.added_at}
+                      name={artist.name}
+                      popularity={artist.popularity}
+                      genre={artist.genres[0]}
+                      images={artist.images}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>}
-          {/* {searchResult.tracks.items.length !==0 && <div>
-            <div>tracks</div>
+          )}
+          {searchResult.tracks.items.length !== 0 && (
             <div>
-              {searchResult.tracks.items.map((item, index) => {
-                return (
-                  <Track
-                    key={index}
-                    date={item.added_at}
-                    // artist={item.track.artists[0].name}
-                    track={item.track.name}
-                    album={item.track.album.name}
-                    releaseDate={item.track.album.release_date}
-                  />
-                );
-              })}
+              <div>tracks</div>
+              <div>
+                {searchResult.tracks.items.map((item, index) => {
+                  return (
+                    <Track
+                      key={index}
+                      // date={item.added_at}
+                      artist={item.artists[0].name}
+                      name={item.name}
+                      album={item.album.name}
+                      releaseDate={item.album.release_date}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>} */}
+          )}
         </div>
       )}
     </div>

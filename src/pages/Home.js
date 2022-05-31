@@ -16,5 +16,5 @@ export default function Home() {
     token !== "" && auth();
     setIsAuth(true);
   }, []);
-  return <div style={{height: '100%'}}>{isAuth && <Container>1111</Container>}</div>;
+  return <div style={{height: '100%'}}>{isAuth && <Container></Container>}</div>;
 }

@@ -1,9 +1,9 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { context } from "../../store/context";
 import { Playlist as PlaylistType } from "../../types/types";
 // import { Link } from "react-router-dom";
-import Playlist from "../Playlist/Playlist";
+// import Playlist from "../Playlist/Playlist";
 // import Playlist from "../Playlist/Playlist";
 
 export default function Playlists() {
@@ -19,7 +19,7 @@ export default function Playlists() {
       initialRender.current = false;
       return;
     }
-    getPlaylists();
+    playlists.length === 0 && getPlaylists();
   }, []);
 
   // const playlistLoading = useAppSelector(selectPlaylists);
@@ -30,31 +30,53 @@ export default function Playlists() {
     // setClicked(true);
   };
 
+  // const onItemClick = useCallback(async (id:string) => {
+  //   console.log('You clicked ', event.currentTarget);
+  // }, [id]);
+
   // const playlists = useAppSelector(selectPlaylists);
 
   console.log("playlists", playlists);
-  // console.log('clicked', clicked);
-  return (
-    <>
-      <div>Playlists</div>
-      <div>
-        {playlists.length !== 0 &&
-          playlists.map((playlist: PlaylistType, index: number) => {
-            return (
-              <div key={index} onClick={() => handlePlaylistClick(playlist.id)} className="minicartButtonsContainer">
-                {/* <Link
-                  style={{ color: "lightcyan" }}
-                  to={`/playlist`}
-                > */}
+
+  return useMemo(() => {
+    // The rest of your rendering logic
+    return (
+      <>
+        <div>Playlists</div>
+        <div>
+          {playlists.length !== 0 &&
+            playlists.map((playlist: PlaylistType, index: number) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => handlePlaylistClick(playlist.id)}
+                >
                   {playlist.tracks.total !== 0 && (
                     <div>{`${playlist.name} (${playlist.tracks.total})`}</div>
                   )}
-                {/* </Link> */}
-              </div>
-            );
-          })}
-      </div>
-      {/* {clicked && <Playlist />} */}
-    </>
-  );
+                </div>
+              );
+            })}
+        </div>
+      </>
+    );
+  }, [playlists]);
+  // console.log('clicked', clicked);
+  // return (
+  //   <>
+  //     <div>Playlists</div>
+  //     <div>
+  //       {playlists.length !== 0 &&
+  //         playlists.map((playlist: PlaylistType, index: number) => {
+  //           return (
+  //             <div key={index} onClick={() => handlePlaylistClick(playlist.id)}>
+  //                 {playlist.tracks.total !== 0 && (
+  //                   <div>{`${playlist.name} (${playlist.tracks.total})`}</div>
+  //                 )}
+  //             </div>
+  //           );
+  //         })}
+  //     </div>
+  //   </>
+  // );
 }

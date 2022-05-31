@@ -3,42 +3,34 @@ import React, { useContext, useEffect, useRef } from "react";
 import Header from "../Header/Header";
 import { context } from "../../store/context";
 // import { loadPlaylists } from "../Playlists/playlistsSlice";
-import Sidebar from "../Sidebar/Sidebar";
 import "./container.css";
 import { Redirect } from "react-router-dom";
+import Playlists from "../Playlists/Playlists";
 
 export default function Container(props) {
   const { tokenIsSet, auth } = useContext(context);
   const initialRender = useRef(true);
 
-  useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-      return;
-    }
+  // const { getPlaylists } = useContext(context);
 
-    auth(auth);
-  }, []);
-
-  // const renderContainer = () => {
-  //   console.log('tokenIsSet333', tokenIsSet)
-  //   if (!tokenIsSet) {
-  //     return <Redirect to="/" />
-  //   } else {
-  //     return (
-  //       <div className="home">
-  //         <Header />
-  //         <Sidebar />
-  //         <main id="main">{props.children}</main>
-  //       </div>
-  //     );
+  // useEffect(() => {
+  //   if (initialRender.current) {
+  //     initialRender.current = false;
+  //     return;
   //   }
-  // };
+
+  //   auth(auth);
+  //   getPlaylists();
+    
+  // }, []);
+
   return (
     <div className="home">
       <Header />
-      <div style={{display: 'flex'}}>
-        <Sidebar />
+      <div style={{ display: "flex", minHeight: '94%', color: 'lightcyan' }}>
+        <div className="sidebar">
+          <Playlists />
+        </div>
         <main id="main">{props.children}</main>
       </div>
     </div>
