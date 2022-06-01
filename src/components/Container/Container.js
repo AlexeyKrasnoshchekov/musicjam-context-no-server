@@ -6,6 +6,7 @@ import { context } from "../../store/context";
 import "./container.css";
 import { Redirect } from "react-router-dom";
 import Playlists from "../Playlists/Playlists";
+import SavedAlbums from "../SavedAlbums/savedAlbums";
 
 export default function Container(props) {
   const { tokenIsSet, auth } = useContext(context);
@@ -30,8 +31,9 @@ export default function Container(props) {
       <div style={{ display: "flex", minHeight: '94%', color: 'lightcyan' }}>
         <div className="sidebar">
           <Playlists />
+          {/* <SavedAlbums /> */}
         </div>
-        <main id="main">{props.children}</main>
+        <main id="main" style={{width: '100%', paddingTop: '2rem', paddingBottom: '2rem', paddingLeft: '2rem'}}>{props.children}</main>
       </div>
     </div>
   );

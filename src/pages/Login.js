@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { context } from "../../store/context";
+import { context } from "../store/context";
 import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
-import { getAccessToken, setUrl } from "../../util/Spotify";
+import { getAccessToken, setUrl } from "../util/Spotify";
 
 export default function Login() {
-  const { setToken, setTokenIsSet, auth } = useContext(context);
+  const { setToken, setTokenIsSet, token } = useContext(context);
   const [authUrlIsSet, setAuthUrlIsSet] = useState(false);
 
   const initialRender = useRef(true);
@@ -27,8 +27,12 @@ export default function Login() {
   }, [authUrlIsSet]);
 
   const handleLogin = () => {
-    setUrl();
-    setAuthUrlIsSet(true);
+    if (token === "") {
+      setUrl();
+      setAuthUrlIsSet(true);
+    } else {
+      setTokenIsSet(true);
+    }
   };
 
   return (

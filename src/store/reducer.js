@@ -3,6 +3,7 @@ export const SET_TOKEN_IS_SET = "SET_TOKEN_IS_SET";
 export const SET_URL_IS_SET = "SET_URL_IS_SET";
 export const SET_PLAYLISTS = "SET_PLAYLISTS";
 export const SET_PLAYLIST = "SET_PLAYLIST";
+export const SET_ALBUM = "SET_ALBUM";
 export const SET_USER = "SET_USER";
 export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
 // export const SET_LOCATION = "SET_LOCATION";
@@ -42,8 +43,14 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
           ...state,
           playlist: action.payload,
         };
+      case SET_ALBUM:
+        console.log('action.payload222', action.payload);
+        return {
+          ...state,
+          album: action.payload,
+        };
       case SET_SEARCH_RESULT:
-        console.log('action.payload222');
+        
         return {
           ...state,
           searchResult: action.payload,

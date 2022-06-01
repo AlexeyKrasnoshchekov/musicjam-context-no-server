@@ -20,6 +20,7 @@ export default function Playlists() {
       return;
     }
     playlists.length === 0 && getPlaylists();
+    // playlists.length === 0 && getSavedAlbums();
   }, []);
 
   // const playlistLoading = useAppSelector(selectPlaylists);

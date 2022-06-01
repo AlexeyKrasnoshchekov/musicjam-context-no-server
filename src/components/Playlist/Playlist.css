@@ -50,3 +50,38 @@
     width: 90%;
   }
 }
+
+.playlist-image {
+
+  height: 250px;
+  min-width: 250px;
+  margin-right: 1rem;
+  cursor: pointer;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
+}
+
+.playlist-inner-container {
+  display: flex;
+  /* width: 100%; */
+}
+
+.playlist-tracks-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.playlist-tracks {
+  outline: 1px solid red;
+  width: 100%;
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.playlist-track {
+  margin-bottom: 1rem;
+}

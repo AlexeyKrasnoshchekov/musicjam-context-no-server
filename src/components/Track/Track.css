@@ -36,6 +36,22 @@
   color: rgba(256, 256, 256, 0.8);
 }
 
-.trackContainer {
+.track-container {
   display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  /* justify-content: space-between; */
+}
+
+.track-song {
+  display: flex;
+  margin-right: 1rem;
+  margin-bottom: 0.15rem;
+}
+.track-info {
+  display: flex;
+  outline: 1px solid yellow;
+  font-size: 0.8rem;
+  opacity: 0.8;
+  /* margin-right: 1rem; */
 }

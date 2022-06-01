@@ -1,13 +1,21 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { context } from "../../store/context";
 import Album from "../Album/Album";
 import Artist from "../Artist/Artist";
 import Item from "../Item/Item";
 import Track from "../Track/Track";
+import './SearchResults.css';
 
 export default function SearchResults() {
-  const { searchResult } = useContext(context);
+  const { searchResult, getAlbum } = useContext(context);
   console.log("searchResult222", searchResult);
+  const history = useHistory();
+  const handleGetAlbum = async (id) => {
+    await getAlbum(id);
+    history.push(`/album/${id}`)
+  }
+
   return (
     <div>
       {searchResult && (
@@ -15,12 +23,13 @@ export default function SearchResults() {
           {searchResult.albums.items.length !== 0 && (
             <div>
               <div>albums</div>
-              <div>
+              <div className="albums-grid">
                 {searchResult.albums.items.map((album, index) => {
                   return (
                     <Item
                       key={index}
-                      // date={item.added_at}
+                      albumId={album.id}
+                      getAlbum={handleGetAlbum}
                       name={album.name}
                       releaseDate={album.release_date}
                       tracksTotal={album.total_tracks}
@@ -35,7 +44,7 @@ export default function SearchResults() {
           {searchResult.artists.items.length !== 0 && (
             <div>
               <div>artists</div>
-              <div>
+              <div className="artists-grid">
                 {searchResult.artists.items.map((artist, index) => {
                   return (
                     <Item
