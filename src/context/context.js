@@ -5,7 +5,7 @@ import reducer from "./reducer";
 import {
   SET_TOKEN,
   SET_TOKEN_IS_SET,
-  SET_URL_IS_SET,
+  CHANGE_TOTAL,
   SET_PLAYLISTS,
   SET_PLAYLIST,
   SET_ALBUM,
@@ -25,6 +25,7 @@ const State = (props) => {
     album: null,
     searchResult: null,
     user: "",
+    total: []
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -84,6 +85,7 @@ const State = (props) => {
                 type: SET_PLAYLISTS,
                 payload: item,
               });
+
             });
           }
         }
@@ -92,6 +94,17 @@ const State = (props) => {
       console.log("error", error);
     }
   };
+
+  const changeTotal = async (playlistName) => {
+    dispatch({
+      type: CHANGE_TOTAL,
+      payload: playlistName,
+    });
+
+    
+  };
+
+
   const getSavedAlbums = async () => {
     console.log('getPlaylists')
 
@@ -148,6 +161,15 @@ const State = (props) => {
         payload: data,
       });
       console.log("data999", state.album);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const play = async (context_uri) => {
+    console.log('context_uri', context_uri);
+    try {
+      await spotifyApi.play(context_uri);  
+      console.log("play");
     } catch (error) {
       console.log(error);
     }
@@ -225,7 +247,8 @@ const State = (props) => {
         search,
         saveAlbum,
         addToPlaylist,
-        createPlaylist
+        createPlaylist,
+        play
       }}
     >
       {props.children}

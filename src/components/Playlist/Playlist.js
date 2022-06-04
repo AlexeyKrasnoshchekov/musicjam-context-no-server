@@ -8,7 +8,7 @@ import 'react-h5-audio-player/lib/styles.css';
 
 export default function Playlist() {
   const [imageIndex, setImageIndex] = useState(0);
-  const { playlist, getAlbum } = useContext(context);
+  const { playlist, getAlbum, play } = useContext(context);
   const history = useHistory();
 
   const handlePrevButton = () => {

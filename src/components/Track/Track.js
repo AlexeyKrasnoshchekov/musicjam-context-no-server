@@ -9,10 +9,14 @@ function Track({ date, artist, track, album,uri, releaseDate, duration, trackNum
   let duration_min = Math.floor(duration / 60);
   let duration_sec = Math.round(duration % 60);
 
-  const { playlists, addToPlaylist } = useContext(context);
+  const { playlists, addToPlaylist, play } = useContext(context);
 
   const handleChange = (value) => {
     addToPlaylist(value, uri);
+  };
+
+  const handlePlay = () => {
+    play(uri);
   };
 
   // console.log('trackNumber', trackNumber)
@@ -34,6 +38,7 @@ function Track({ date, artist, track, album,uri, releaseDate, duration, trackNum
           return <Option key={playlist.id} value={playlist.id}>{playlist.name}</Option>
         })}
       </Select>
+      <div onClick={handlePlay}>PLAY</div>
     </div>
   );
 }

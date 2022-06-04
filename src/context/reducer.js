@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 export const SET_TOKEN = "SET_TOKEN";
 export const SET_TOKEN_IS_SET = "SET_TOKEN_IS_SET";
 export const SET_URL_IS_SET = "SET_URL_IS_SET";
@@ -5,12 +6,14 @@ export const SET_PLAYLISTS = "SET_PLAYLISTS";
 export const SET_PLAYLIST = "SET_PLAYLIST";
 export const SET_ALBUM = "SET_ALBUM";
 export const SET_USER = "SET_USER";
+export const CHANGE_TOTAL = "CHANGE_TOTAL";
 export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
 // export const SET_LOCATION = "SET_LOCATION";
 // export const SET_SORT_BY = "SET_SORT_BY";
 // export const SET_PAGE = "SET_PAGE";
 // export const CLEAR_PLACES = "CLEAR_PLACES";
   
+  // eslint-disable-next-line import/no-anonymous-default-export
   export default (state, action) => {
     switch (action.type) {
       case SET_TOKEN:
@@ -60,6 +63,7 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
           ...state,
           user: action.payload,
         };
+
       // case SET_TERM:
       //   return {
       //     ...state,
