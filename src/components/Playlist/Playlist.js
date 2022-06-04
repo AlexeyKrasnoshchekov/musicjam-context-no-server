@@ -6,6 +6,7 @@ import Track from "../Track/Track";
 // import { selectPlaylist } from "./playlistSlice";
 import "./Playlist.css";
 import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 export default function Playlist() {
   const [imageIndex, setImageIndex] = useState(0);
@@ -83,9 +84,10 @@ export default function Playlist() {
             <h3>tracks</h3>
             {playlist.tracks.items.length !== 0 && (
               <div className="playlist-tracks">
-                {playlist.tracks.items.map((item) => {
+                {playlist.tracks.items.map((item, index) => {
                   return (
                     <Track
+                      key={index}
                       date={item.added_at}
                       albumId={item.track.album.id}
                       getAlbum={handleGetAlbum}

@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { context } from "../../store/context";
@@ -7,7 +8,7 @@ import { Playlist as PlaylistType } from "../../types/types";
 // import Playlist from "../Playlist/Playlist";
 
 export default function Playlists() {
-  const { playlists, getPlaylists, getPlaylist } = useContext(context);
+  const { playlists, getPlaylists, getPlaylist, createPlaylist } = useContext(context);
 
   const initialRender = useRef(true);
   const history = useHistory();
@@ -30,6 +31,12 @@ export default function Playlists() {
     history.push("/playlist");
     // setClicked(true);
   };
+
+  const handleCreatePlaylist = () => {
+    const name = prompt("Please enter playlist name", "My playlist");
+
+    createPlaylist(name);
+  }
 
   // const onItemClick = useCallback(async (id:string) => {
   //   console.log('You clicked ', event.currentTarget);
@@ -59,25 +66,8 @@ export default function Playlists() {
               );
             })}
         </div>
+        <Button onClick={handleCreatePlaylist} type="primary">Create</Button>
       </>
     );
   }, [playlists]);
-  // console.log('clicked', clicked);
-  // return (
-  //   <>
-  //     <div>Playlists</div>
-  //     <div>
-  //       {playlists.length !== 0 &&
-  //         playlists.map((playlist: PlaylistType, index: number) => {
-  //           return (
-  //             <div key={index} onClick={() => handlePlaylistClick(playlist.id)}>
-  //                 {playlist.tracks.total !== 0 && (
-  //                   <div>{`${playlist.name} (${playlist.tracks.total})`}</div>
-  //                 )}
-  //             </div>
-  //           );
-  //         })}
-  //     </div>
-  //   </>
-  // );
 }

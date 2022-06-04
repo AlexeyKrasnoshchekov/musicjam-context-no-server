@@ -1,9 +1,19 @@
+import { Select } from "antd";
+import { Option } from "antd/lib/mentions";
+import { useContext } from "react";
+import { context } from "../../store/context";
 import "./Track.css";
 
-function Track({ date, artist, track, album, releaseDate, duration, trackNumber, albumId, getAlbum }) {
+function Track({ date, artist, track, album,uri, releaseDate, duration, trackNumber, albumId, getAlbum }) {
 
   let duration_min = Math.floor(duration / 60);
   let duration_sec = Math.round(duration % 60);
+
+  const { playlists, addToPlaylist } = useContext(context);
+
+  const handleChange = (value) => {
+    addToPlaylist(value, uri);
+  };
 
   // console.log('trackNumber', trackNumber)
 
@@ -19,6 +29,11 @@ function Track({ date, artist, track, album, releaseDate, duration, trackNumber,
         {releaseDate && <div>{`Realesed: ${releaseDate}`}</div>}
         {duration && <div>{`Duration: ${duration_min}:${duration_sec}`}</div>}
       </div>
+      <Select onChange={handleChange}>
+        {playlists.map(playlist => {
+          return <Option key={playlist.id} value={playlist.id}>{playlist.name}</Option>
+        })}
+      </Select>
     </div>
   );
 }

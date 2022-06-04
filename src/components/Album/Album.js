@@ -83,14 +83,16 @@ export default function Album() {
             <h3>{album.name}</h3>
             {album.tracks.items.length !== 0 && (
               <div className="album-tracks">
-                {album.tracks.items.map((item) => {
+                {album.tracks.items.map((item, index) => {
                   return (
                     <Track
+                      key={index}
                       // date={item.added_at}
                       // artist={item.artists[0].name}
                       track={item.name}
                       trackNumber={item.track_number}
                       duration={item.duration_ms / 1000}
+                      uri={item.uri}
                       // releaseDate={item.track.album.release_date}
                     />
                   );

@@ -168,6 +168,28 @@ const State = (props) => {
       console.log(error);
     }
   };
+  const addToPlaylist = async (playlistId, uri) => {
+    try {
+      await spotifyApi.addTracksToPlaylist(playlistId, [uri]);
+      console.log("addTracksToPlaylist", playlistId);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const createPlaylist = async (playlistName) => {
+    const data = await spotifyApi.getMe();
+    console.log('data2323', data);
+    try {
+      let newPlaylist = await spotifyApi.createPlaylist(data.id, {name: playlistName});
+      console.log('data4455', newPlaylist.id)
+      await spotifyApi.addTracksToPlaylist(newPlaylist.id, ["spotify:track:2bfGNzdiRa1jXZRdfssSzR"]);
+      console.log("createPlaylist");
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const search = async (searchTerm) => {
     const types = ["artist", "album", "track"];
     // spotifyApi.setAccessToken(state.token);
@@ -202,7 +224,9 @@ const State = (props) => {
         getPlaylist,
         setTokenIsSet,
         search,
-        saveAlbum
+        saveAlbum,
+        addToPlaylist,
+        createPlaylist
       }}
     >
       {props.children}

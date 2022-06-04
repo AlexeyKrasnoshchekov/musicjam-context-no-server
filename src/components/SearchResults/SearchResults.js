@@ -73,6 +73,7 @@ export default function SearchResults() {
                       name={item.name}
                       album={item.album.name}
                       releaseDate={item.album.release_date}
+                      uri={item.uri}
                     />
                   );
                 })}
