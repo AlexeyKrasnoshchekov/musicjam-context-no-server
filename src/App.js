@@ -1,28 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Playlist from "./components/Playlist/Playlist";
 
 import Login from "./pages/Login";
 import Container from "./components/Container/Container";
-import { context } from "./store/context";
+import { context } from "./context/context";
 import Home from "./pages/Home";
 import SearchResults from "./components/SearchResults/SearchResults";
 import Album from "./components/Album/Album";
 
 export default function App() {
-  // const [accessToken, setAccessToken] = useState("");
-  // const [tokenIsSet, setTokenIsSet] = useState(false);
 
   const {
     tokenIsSet,
-    // getToken,
-    // logout,
   } = useContext(context);
 
   return (
-    // <apiContext.Provider value={spotifyApi}>
     <Router>
       <Switch>
         <Route path={"/album/:id"}>
@@ -45,6 +40,5 @@ export default function App() {
         </Route>
       </Switch>
     </Router>
-    // </apiContext.Provider>
   );
 }

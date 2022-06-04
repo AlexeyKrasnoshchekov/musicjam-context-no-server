@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { context } from "../../store/context";
+import { context } from "../../context/context";
 
 export default function SavedAlbums() {
   const { getSavedAlbums } = useContext(context);

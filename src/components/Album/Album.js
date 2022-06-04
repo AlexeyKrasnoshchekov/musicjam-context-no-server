@@ -1,15 +1,11 @@
-import React, { useContext, useState } from "react";
-import { context } from "../../store/context";
-import SavedAlbums from "../SavedAlbums/savedAlbums";
-// import { useAppSelector } from "../../hooks/redux";
+import { useContext, useState } from "react";
+import { context } from "../../context/context";
 import Track from "../Track/Track";
-// import { selectPlaylist } from "./playlistSlice";
 import "./album.css";
 
 export default function Album() {
   const [imageIndex, setImageIndex] = useState(0);
   const { album, saveAlbum } = useContext(context);
-  // const playlist = useAppSelector(selectPlaylist);
 
   const handlePrevButton = () => {
     if (imageIndex > 0 && imageIndex <= album.images.length) {
@@ -34,21 +30,13 @@ export default function Album() {
     }
   };
 
-  const handleSaveAlbum = (id) => {
-    console.log('id', id)
-    saveAlbum(id);
-  }
-  console.log("222", album);
   return (
     <div>
-      {/* <div>{album.name}</div> */}
       {album.images && (
         <div
           className="album-inner-container"
           style={{ outline: "2px solid red" }}
         >
-          {/* <div>{album.owner.display_name}</div> */}
-          {/* <div> */}
           {album.images.length !== 0 && (
             <div
               style={{
@@ -87,13 +75,10 @@ export default function Album() {
                   return (
                     <Track
                       key={index}
-                      // date={item.added_at}
-                      // artist={item.artists[0].name}
                       track={item.name}
                       trackNumber={item.track_number}
                       duration={item.duration_ms / 1000}
                       uri={item.uri}
-                      // releaseDate={item.track.album.release_date}
                     />
                   );
                 })}

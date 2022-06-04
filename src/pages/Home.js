@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Container from "../components/Container/Container";
-import { context } from "../store/context";
+import { context } from "../context/context";
 
 export default function Home() {
   const [isAuth, setIsAuth] = useState(false);

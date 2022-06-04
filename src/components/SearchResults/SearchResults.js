@@ -1,8 +1,6 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { context } from "../../store/context";
-import Album from "../Album/Album";
-import Artist from "../Artist/Artist";
+import { context } from "../../context/context";
 import Item from "../Item/Item";
 import Track from "../Track/Track";
 import './SearchResults.css';

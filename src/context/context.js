@@ -1,7 +1,6 @@
 import { useReducer } from "react";
 import { createContext } from "react";
 import SpotifyWebApi from "spotify-web-api-js";
-import { getAccessToken, setUrl } from "../util/Spotify";
 import reducer from "./reducer";
 import {
   SET_TOKEN,

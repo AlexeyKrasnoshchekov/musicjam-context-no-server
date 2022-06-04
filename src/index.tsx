@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import State from "./store/context";
+import State from "./context/context";
 import "./index.css";
 import 'antd/dist/antd.css';
 import App from "./App";

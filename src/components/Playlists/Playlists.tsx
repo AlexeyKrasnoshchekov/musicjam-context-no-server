@@ -1,11 +1,8 @@
 import { Button } from "antd";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { context } from "../../store/context";
+import { useContext, useEffect, useMemo, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import { context } from "../../context/context";
 import { Playlist as PlaylistType } from "../../types/types";
-// import { Link } from "react-router-dom";
-// import Playlist from "../Playlist/Playlist";
-// import Playlist from "../Playlist/Playlist";
 
 export default function Playlists() {
   const { playlists, getPlaylists, getPlaylist, createPlaylist } = useContext(context);
@@ -13,23 +10,18 @@ export default function Playlists() {
   const initialRender = useRef(true);
   const history = useHistory();
 
-  // const [clicked, setClicked] = useState<boolean>(false);
-
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
       return;
     }
     playlists.length === 0 && getPlaylists();
-    // playlists.length === 0 && getSavedAlbums();
   }, []);
 
-  // const playlistLoading = useAppSelector(selectPlaylists);
   const handlePlaylistClick = async (id: string) => {
     console.log("111222");
     await getPlaylist(id);
     history.push("/playlist");
-    // setClicked(true);
   };
 
   const handleCreatePlaylist = () => {
@@ -37,12 +29,6 @@ export default function Playlists() {
 
     createPlaylist(name);
   }
-
-  // const onItemClick = useCallback(async (id:string) => {
-  //   console.log('You clicked ', event.currentTarget);
-  // }, [id]);
-
-  // const playlists = useAppSelector(selectPlaylists);
 
   console.log("playlists", playlists);
 

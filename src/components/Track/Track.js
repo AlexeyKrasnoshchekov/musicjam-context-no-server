@@ -1,7 +1,7 @@
 import { Select } from "antd";
 import { Option } from "antd/lib/mentions";
 import { useContext } from "react";
-import { context } from "../../store/context";
+import { context } from "../../context/context";
 import "./Track.css";
 
 function Track({ date, artist, track, album,uri, releaseDate, duration, trackNumber, albumId, getAlbum }) {

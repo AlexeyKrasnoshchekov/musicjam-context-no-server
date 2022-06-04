@@ -1,22 +1,11 @@
 import "./item.css";
 
 export default function Item(props) {
-  // console.log("images", props.images);
-
-  //   useEffect(() => {
-  //     props.images.length !== 0 &&
-  //       props.images.map((image) =>
-  //         setImages((oldArray) => [...oldArray, image])
-  //       );
-  //   }, []);
-
-
 
   return (
     <div onClick={() => props.albumId && props.getAlbum(props.albumId)}>
       {props.images.length !== 0 && (
         <div
-          // key={index}
           style={{
             backgroundImage: `url(${props.images[1].url})`,
           }}

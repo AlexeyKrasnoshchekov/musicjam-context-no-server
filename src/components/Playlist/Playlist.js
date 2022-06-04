@@ -1,9 +1,7 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { context } from "../../store/context";
-// import { useAppSelector } from "../../hooks/redux";
+import { context } from "../../context/context";
 import Track from "../Track/Track";
-// import { selectPlaylist } from "./playlistSlice";
 import "./Playlist.css";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
@@ -12,7 +10,6 @@ export default function Playlist() {
   const [imageIndex, setImageIndex] = useState(0);
   const { playlist, getAlbum } = useContext(context);
   const history = useHistory();
-  // const playlist = useAppSelector(selectPlaylist);
 
   const handlePrevButton = () => {
     if (imageIndex > 0 && imageIndex <= playlist.images.length) {
@@ -44,14 +41,11 @@ export default function Playlist() {
   console.log("222", playlist);
   return (
     <div>
-      {/* <div>{playlist.name}</div> */}
       {playlist.images && (
         <div
           className="playlist-inner-container"
           style={{ outline: "2px solid red" }}
         >
-          {/* <div>{playlist.owner.display_name}</div> */}
-          {/* <div> */}
           {playlist.images.length !== 0 && (
             <div
               style={{

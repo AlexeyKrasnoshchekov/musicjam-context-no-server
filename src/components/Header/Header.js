@@ -1,15 +1,11 @@
-import React, { useContext, useState } from "react";
-// import { selectOwner } from "../Playlists/playlistsSlice";
+import { useContext, useState } from "react";
 import "./header.css";
 import { FiLogOut } from "react-icons/fi";
-import { context } from "../../store/context";
+import { context } from "../../context/context";
 import { useHistory } from "react-router-dom";
-// import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-// import { loadSearch, selectSearch } from "./searchSlice";
 
 function Header() {
-  // const dispatch = useAppDispatch();
-  // const user = useAppSelector(selectOwner);
+
   const history = useHistory();
   const [searchTerm, setSearchTerm] = useState("");
   const {
@@ -25,21 +21,13 @@ function Header() {
     e.preventDefault();
     search(searchTerm);
     history.push("/search");
-    // await dispatch(loadSearch(searchTerm));
-    // const data = await search(
-    //   searchTerm,
-    //   types,
-    //   {limit: 5, market: "RU"}
-    // )
-    // console.log("data", data);
+
   };
   const handleLogout = async () => {
     logout();
     history.push("/");
   };
 
-  // const searchData = useAppSelector(selectSearch);
-  // console.log('searchResult', searchResult);
 
   return (
     <div className="header">
