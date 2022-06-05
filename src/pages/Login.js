@@ -2,6 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../context/context";
 import { useLocation } from "react-router-dom";
 import { getAccessToken, setUrl } from "../util/Spotify";
+import {  Button, Layout} from "antd";
+const { Header, Footer, Sider, Content } = Layout;
 
 export default function Login() {
   const { setToken, setTokenIsSet, token } = useContext(context);
@@ -33,12 +35,16 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <>
+    <Layout>
+      <Content>
       <img
         src="https://getheavy.com/wp-content/uploads/2019/12/spotify2019-830x350.jpg"
         alt="Spotify-Logo"
       />
-      <button onClick={handleLogin}>LOGIN WITH SPOTIFY</button>
-    </div>
+      <Button onClick={handleLogin} type="primary">LOGIN WITH SPOTIFY</Button>
+      </Content>
+    </Layout>
+    </>
   );
 }

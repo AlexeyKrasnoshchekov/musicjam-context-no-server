@@ -4,7 +4,7 @@ import { FiLogOut } from "react-icons/fi";
 import { context } from "../../context/context";
 import { useHistory } from "react-router-dom";
 
-function Header() {
+function Header1() {
 
   const history = useHistory();
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,9 +31,9 @@ function Header() {
 
   return (
     <div className="header">
-      <form onSubmit={(e) => handleSearch(e)}>
+      {/* <form onSubmit={(e) => handleSearch(e)}>
         <input onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} placeholder="search..." />
-      </form>
+      </form> */}
       <div>App</div>
       <div className="log">
         <div className="log-title">{`Logged in as ${user}`}</div>
@@ -44,4 +44,4 @@ function Header() {
     </div>
   );
 }
-export default Header;
+export default Header1;
