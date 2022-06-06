@@ -13,6 +13,9 @@ import {
   SET_MY_TRACKS,
   SET_USER,
   SET_SEARCH_RESULT,
+  DELETE_PLAYLIST_ITEM,
+  SET_PLAYLIST_ITEMS,
+  DELETE_MY_TRACKS_ITEM
 } from "./reducer";
 
 export const context = createContext();
@@ -25,6 +28,7 @@ const State = (props) => {
     playlists: [],
     mySavedAlbums: [],
     mySavedTracks: [],
+    playlistItems: [],
     playlist: null,
     album: null,
     searchResult: null,
@@ -105,6 +109,15 @@ const State = (props) => {
         type: SET_PLAYLIST,
         payload: data,
       });
+      if (data.tracks.items.length !== 0) {
+        data.tracks.items.forEach((item) => {
+          dispatch({
+            type: SET_PLAYLIST_ITEMS,
+            payload: item,
+          });
+        });
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -132,10 +145,16 @@ const State = (props) => {
       console.log(error);
     }
   };
-  const removeFromPlaylist = async (playlistId, uri) => {
+  const removeFromPlaylist = async (playlistId, uri, trackId) => {
+    console.log("removeTracksFromPlaylist1", playlistId);
+    console.log("removeTracksFromPlaylist2", uri);
     try {
       await spotifyApi.removeTracksFromPlaylist(playlistId, [uri]);
       console.log("removeTracksFromPlaylist", playlistId);
+      await dispatch({
+        type: DELETE_PLAYLIST_ITEM,
+        payload: trackId,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -172,6 +191,20 @@ const State = (props) => {
     console.log("albumId", trackId);
     try {
       await spotifyApi.addToMySavedAlbums([trackId]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const removeFromMySavedTracks = async (trackId) => {
+    // console.log("removeTracksFromPlaylist1", playlistId);
+    // console.log("removeTracksFromPlaylist2", uri);
+    try {
+      await spotifyApi.removeFromMySavedTracks([trackId]);
+      console.log("removeTracksFromPlaylist", trackId);
+      await dispatch({
+        type: DELETE_MY_TRACKS_ITEM,
+        payload: trackId,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -239,6 +272,7 @@ const State = (props) => {
         searchResult: state.searchResult,
         mySavedAlbums: state.mySavedAlbums,
         mySavedTracks: state.mySavedTracks,
+        playlistItems: state.playlistItems,
         setToken,
         auth,
         logout,
@@ -254,6 +288,7 @@ const State = (props) => {
         addToMySavedAlbums,
         getMySavedAlbums,
         addToMySavedTracks,
+        removeFromMySavedTracks,
         getMySavedTracks
       }}
     >

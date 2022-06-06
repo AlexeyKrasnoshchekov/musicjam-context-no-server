@@ -10,6 +10,11 @@ export const SET_MY_ALBUMS = "SET_MY_ALBUMS";
 export const SET_USER = "SET_USER";
 export const CHANGE_TOTAL = "CHANGE_TOTAL";
 export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
+export const DELETE_PLAYLIST_ITEM = "DELETE_PLAYLIST_ITEM";
+export const SET_PLAYLIST_ITEMS = "SET_PLAYLIST_ITEMS";
+export const DELETE_MY_TRACKS_ITEM = "DELETE_MY_TRACKS_ITEM";
+
+
 // export const SET_LOCATION = "SET_LOCATION";
 // export const SET_SORT_BY = "SET_SORT_BY";
 // export const SET_PAGE = "SET_PAGE";
@@ -76,6 +81,21 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
         return {
           ...state,
           user: action.payload,
+        };
+        case DELETE_PLAYLIST_ITEM:
+        return {
+          ...state,
+          playlistItems: state.playlistItems.filter(item => item.track.id !== action.payload),
+        };
+        case SET_PLAYLIST_ITEMS:
+        return {
+          ...state,
+          playlistItems: [...state.playlistItems, action.payload],
+        };
+        case DELETE_MY_TRACKS_ITEM:
+        return {
+          ...state,
+          mySavedTracks: state.mySavedTracks.filter(item => item.track.id !== action.payload),
         };
 
       // case SET_TERM:

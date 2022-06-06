@@ -40,6 +40,11 @@ export default function SavedAlbums() {
       dataIndex: "duration",
       key: "duration",
     },
+    {
+      title: "Del",
+      key: "del",
+      render: () => <b>Del</b>,
+    },
   ];
 
   const formatData = () => {

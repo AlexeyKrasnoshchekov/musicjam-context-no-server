@@ -36,9 +36,9 @@ export default function Login() {
   return (
     <>
     {/* <Space size="middle"></Space> */}
-      <Row >
-        <Col span={4}></Col>
-        <Col span={16}>
+      <Row>
+        <Col span={2}></Col>
+        <Col span={20}>
           <Row justify="center" align="bottom">
             <img
               src="https://getheavy.com/wp-content/uploads/2019/12/spotify2019-830x350.jpg"
@@ -50,7 +50,7 @@ export default function Login() {
             </Button>
           </Row>
         </Col>
-        <Col span={4}></Col>
+        <Col span={2}></Col>
       </Row>
     </>
   );

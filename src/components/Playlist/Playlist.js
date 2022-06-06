@@ -8,7 +8,7 @@ import 'react-h5-audio-player/lib/styles.css';
 
 export default function Playlist() {
   const [imageIndex, setImageIndex] = useState(0);
-  const { playlist, getAlbum, play } = useContext(context);
+  const { playlist, playlistItems, getAlbum, removeFromPlaylist } = useContext(context);
   const history = useHistory();
 
   const handlePrevButton = () => {
@@ -76,11 +76,12 @@ export default function Playlist() {
 
           <div className="playlist-tracks-container">
             <h3>tracks</h3>
-            {playlist.tracks.items.length !== 0 && (
+            {playlistItems.length !== 0 && (
               <div className="playlist-tracks">
-                {playlist.tracks.items.map((item, index) => {
+                {playlistItems.map((item, index) => {
                   return (
-                    <Track
+                    <div>
+                      <Track
                       key={index}
                       date={item.added_at}
                       albumId={item.track.album.id}
@@ -90,6 +91,8 @@ export default function Playlist() {
                       album={item.track.album.name}
                       releaseDate={item.track.album.release_date}
                     />
+                    <div onClick={() => {removeFromPlaylist(playlist.id, item.track.uri, item.track.id)}}>DEL</div>
+                    </div>
                   );
                 })}
               </div>
