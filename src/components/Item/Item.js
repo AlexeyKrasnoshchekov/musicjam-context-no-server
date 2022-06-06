@@ -12,6 +12,7 @@ export default function Item(props) {
           className="item-container"
           alt="main logo"
         >
+          {props.albumId && <div onClick={() => {props.addAlbum(props.albumId)}}>ADD</div>}
           <div className="item-inner-container">
             <div>
               {props.artist && <div>{`Artist: ${props.artist}`}</div>}

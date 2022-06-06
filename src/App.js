@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Playlist from "./components/Playlist/Playlist";
+import SavedTracks from './components/SavedTracks/savedTracks';
 
 import Login from "./pages/Login";
 import Container from "./components/Container/Container";
@@ -28,6 +29,11 @@ export default function App() {
         <Route path={"/playlist"}>
           <Container>
             <Playlist />
+          </Container>
+        </Route>
+        <Route path={"/savedtracks"}>
+          <Container>
+            <SavedTracks />
           </Container>
         </Route>
         <Route path={"/search"}>

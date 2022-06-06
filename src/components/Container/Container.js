@@ -1,37 +1,22 @@
 import Header1 from "../Header/Header";
 import "./container.css";
 
-
-import {  Layout, Menu, icons, AutoComplete } from "antd";
-import { 
-  UnorderedListOutlined
- } from "@ant-design/icons";
+import { Layout, Menu, icons, AutoComplete } from "antd";
+import { UnorderedListOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Playlists from "../Playlists/Playlists";
 import { context } from "../../context/context";
 import { useHistory } from "react-router-dom";
+import SubMenu from "antd/lib/menu/SubMenu";
 const { Header, Content, Footer, Sider } = Layout;
-
-
-
-
-
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  };
-}
 
 
 
 const Container = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const { playlists, getPlaylists, getPlaylist, search} = useContext(context);
+  const { playlists, getAlbum, getPlaylists, getPlaylist, search, mySavedAlbums, getMySavedAlbums, mySavedTracks, getMySavedTracks } = useContext(context);
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [options, setOptions] = useState([]);
 
   const initialRender = useRef(true);
@@ -53,7 +38,9 @@ const Container = (props) => {
 
   const onSearch = (searchText) => {
     setOptions(
-      !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)],
+      !searchText
+        ? []
+        : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
     );
   };
 
@@ -72,6 +59,11 @@ const Container = (props) => {
     history.push("/playlist");
   };
 
+  const handleGetAlbum = async (id) => {
+    await getAlbum(id);
+    history.push(`/album/${id}`)
+  }
+
   const items3 = [UnorderedListOutlined].map((icon, index) => {
     const key = String(index + 1);
     const length = playlists.length;
@@ -89,9 +81,8 @@ const Container = (props) => {
       }),
     };
   });
-  
 
-
+  console.log('mySavedAlbums', mySavedAlbums)
 
   useEffect(() => {
     if (initialRender.current) {
@@ -99,15 +90,21 @@ const Container = (props) => {
       return;
     }
     playlists.length === 0 && getPlaylists();
+    mySavedAlbums.length === 0 && getMySavedAlbums();
+    mySavedTracks.length === 0 && getMySavedTracks();
   }, []);
 
   return (
     <Layout
       style={{
-        minHeight: '100vh',
+        minHeight: "100vh",
       }}
     >
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+      >
         <AutoComplete
           options={options}
           style={{
@@ -118,24 +115,42 @@ const Container = (props) => {
           placeholder="input here"
         />
         <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{
-              height: '100%',
-            }}
-            items={items3}
-            // onClick={() => handlePlaylistClick(item.id)}
-          />
+          mode="inline"
+          defaultSelectedKeys={["sub1"]}
+          // defaultOpenKeys={["sub1"]}
+          style={{
+            height: "100%",
+          }}
+        >
+          <SubMenu key="sub1" title="Playlists">
+            {playlists.map((playlist, index) => {
+              const subKey = playlists.length + index + 1;
+              return <Menu.Item key={subKey} onClick={() => {handlePlaylistClick(playlist.id)}}>{playlist.name}</Menu.Item>
+            })}
+          </SubMenu>
+          <SubMenu key="sub2" title="Saved Albums">
+            {mySavedAlbums.map((item, index) => {
+              const subKey = mySavedAlbums.length + index + 1;
+              return <Menu.Item key={subKey} onClick={() => {handleGetAlbum(item.album.id)}}>{`${item.album.name} (${item.album.artists[0].name})`}</Menu.Item>
+            })}
+          </SubMenu>
+          <Menu.Item key="1" onClick={() => {history.push(`/savedtracks`)}}>Saved Tracks</Menu.Item>
+          {/* <SubMenu key="sub3" title="Saved Tracks">
+            {mySavedAlbums.map((item, index) => {
+              const subKey = mySavedAlbums.length + index + 1;
+              return <Menu.Item key={subKey} onClick={() => {handleGetAlbum(item.album.id)}}>{`${item.album.name} (${item.album.artists[0].name})`}</Menu.Item>
+            })}
+          </SubMenu> */}
+        </Menu>
       </Sider>
       <Layout className="site-layout">
-      <Header className="header">
-        <div className="logo" />
-        <Header1 />
-      </Header>
+        <Header className="header">
+          <div className="logo" />
+          <Header1 />
+        </Header>
         <Content
           style={{
-            margin: '0 16px',
+            margin: "0 16px",
           }}
         >
           <div
@@ -150,7 +165,7 @@ const Container = (props) => {
         </Content>
         <Footer
           style={{
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
           Ant Design ©2018 Created by Ant UED
@@ -161,7 +176,6 @@ const Container = (props) => {
 };
 
 export default Container;
-
 
 // export default function Container(props) {
 

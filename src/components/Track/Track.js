@@ -15,9 +15,9 @@ function Track({ date, artist, track, album,uri, releaseDate, duration, trackNum
     addToPlaylist(value, uri);
   };
 
-  const handlePlay = () => {
-    play(uri);
-  };
+  // const handlePlay = () => {
+  //   play(uri);
+  // };
 
   // console.log('trackNumber', trackNumber)
 
@@ -38,7 +38,7 @@ function Track({ date, artist, track, album,uri, releaseDate, duration, trackNum
           return <Option key={playlist.id} value={playlist.id}>{playlist.name}</Option>
         })}
       </Select>
-      <div onClick={handlePlay}>PLAY</div>
+      {/* <div onClick={handlePlay}>PLAY</div> */}
     </div>
   );
 }

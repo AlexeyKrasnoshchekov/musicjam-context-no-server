@@ -9,8 +9,10 @@ import {
   SET_PLAYLISTS,
   SET_PLAYLIST,
   SET_ALBUM,
+  SET_MY_ALBUMS,
+  SET_MY_TRACKS,
   SET_USER,
-  SET_SEARCH_RESULT
+  SET_SEARCH_RESULT,
 } from "./reducer";
 
 export const context = createContext();
@@ -21,11 +23,13 @@ const State = (props) => {
     tokenIsSet: false,
     urlIsSet: false,
     playlists: [],
+    mySavedAlbums: [],
+    mySavedTracks: [],
     playlist: null,
     album: null,
     searchResult: null,
     user: "",
-    total: []
+    total: [],
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -33,7 +37,7 @@ const State = (props) => {
   const spotifyApi = new SpotifyWebApi();
 
   const setToken = (token) => {
-    console.log('token777', token);
+    console.log("token777", token);
     dispatch({ type: SET_TOKEN, payload: token });
   };
   const setTokenIsSet = (bool) =>
@@ -48,7 +52,7 @@ const State = (props) => {
   //   // console.log("token2", state.token);
   // };
   const auth = () => {
-    console.log('auth', state.token);
+    console.log("auth", state.token);
     spotifyApi.setAccessToken(state.token);
   };
 
@@ -60,7 +64,7 @@ const State = (props) => {
   };
 
   const getPlaylists = async () => {
-    console.log('getPlaylists')
+    console.log("getPlaylists");
 
     try {
       let data = await spotifyApi.getUserPlaylists();
@@ -85,56 +89,10 @@ const State = (props) => {
                 type: SET_PLAYLISTS,
                 payload: item,
               });
-
             });
           }
         }
       }
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  const changeTotal = async (playlistName) => {
-    dispatch({
-      type: CHANGE_TOTAL,
-      payload: playlistName,
-    });
-
-    
-  };
-
-
-  const getSavedAlbums = async () => {
-    console.log('getPlaylists')
-
-    try {
-      let data = await spotifyApi.getUser();
-      console.log("data333", data);
-      // let data2 = await data.json();
-      // return data.items; // note that we don't pass a user id
-
-      // if (data) {
-      //   if (data.items.length !== 0) {
-      //     dispatch({
-      //       type: SET_USER,
-      //       payload: data.items[0].owner.display_name,
-      //     });
-
-      //     let playlistsWithSongs = data.items.filter(
-      //       (playlist) => playlist.tracks.total !== 0
-      //     );
-
-      //     if (playlistsWithSongs.length !== 0) {
-      //       playlistsWithSongs.forEach((item) => {
-      //         dispatch({
-      //           type: SET_PLAYLISTS,
-      //           payload: item,
-      //         });
-      //       });
-      //     }
-      //   }
-      // }
     } catch (error) {
       console.log("error", error);
     }
@@ -152,7 +110,7 @@ const State = (props) => {
     }
   };
   const getAlbum = async (albumId) => {
-    console.log('first')
+    console.log("first");
     try {
       let data = await spotifyApi.getAlbum(albumId);
       console.log("data888", data);
@@ -165,48 +123,82 @@ const State = (props) => {
       console.log(error);
     }
   };
-  const play = async (context_uri) => {
-    console.log('context_uri', context_uri);
-    try {
-      await spotifyApi.play(context_uri);  
-      console.log("play");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const saveAlbum = async (albumId) => {
-    console.log('first', albumId)
-    spotifyApi.setAccessToken(state.token);
-    try {
-      await spotifyApi.addToMySavedAlbums(albumId);
-      console.log("addToMySavedAlbums");
-      // await dispatch({
-      //   type: SET_ALBUM,
-      //   payload: data,
-      // });
-      // console.log("data999", state.album);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const addToPlaylist = async (playlistId, uri) => {
     try {
       await spotifyApi.addTracksToPlaylist(playlistId, [uri]);
       console.log("addTracksToPlaylist", playlistId);
-
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const addToMySavedAlbums = async (albumId) => {
+    console.log("albumId", albumId);
+    console.log("albumId2", typeof albumId);
+    try {
+      await spotifyApi.addToMySavedAlbums([albumId]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getMySavedAlbums = async () => {
+    console.log("getMySavedAlbums");
+    try {
+      let data = await spotifyApi.getMySavedAlbums();
+      console.log("datagetMySavedAlbums", data);
+      if (data) {
+        if (data.items.length !== 0) {
+          data.items.forEach((item) => {
+            dispatch({
+              type: SET_MY_ALBUMS,
+              payload: item,
+            });
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const addToMySavedTracks = async (trackId) => {
+    console.log("albumId", trackId);
+    try {
+      await spotifyApi.addToMySavedAlbums([trackId]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getMySavedTracks = async () => {
+    console.log("getMySavedAlbums");
+    try {
+      let data = await spotifyApi.getMySavedTracks();
+      console.log("datagetMySavedTracks", data);
+      if (data) {
+        if (data.items.length !== 0) {
+          data.items.forEach((item) => {
+            dispatch({
+              type: SET_MY_TRACKS,
+              payload: item,
+            });
+          });
+        }
+      }
     } catch (error) {
       console.log(error);
     }
   };
   const createPlaylist = async (playlistName) => {
     const data = await spotifyApi.getMe();
-    console.log('data2323', data);
+    console.log("data2323", data);
     try {
-      let newPlaylist = await spotifyApi.createPlaylist(data.id, {name: playlistName});
-      console.log('data4455', newPlaylist.id)
-      await spotifyApi.addTracksToPlaylist(newPlaylist.id, ["spotify:track:2bfGNzdiRa1jXZRdfssSzR"]);
+      let newPlaylist = await spotifyApi.createPlaylist(data.id, {
+        name: playlistName,
+      });
+      console.log("data4455", newPlaylist.id);
+      await spotifyApi.addTracksToPlaylist(newPlaylist.id, [
+        "spotify:track:2bfGNzdiRa1jXZRdfssSzR",
+      ]);
       console.log("createPlaylist");
-
     } catch (error) {
       console.log(error);
     }
@@ -215,7 +207,7 @@ const State = (props) => {
     const types = ["artist", "album", "track"];
     // spotifyApi.setAccessToken(state.token);
     try {
-      let data = await spotifyApi.search(searchTerm, types, {limit: 5});
+      let data = await spotifyApi.search(searchTerm, types, { limit: 5 });
       console.log("data777", data);
       dispatch({
         type: SET_SEARCH_RESULT,
@@ -237,7 +229,9 @@ const State = (props) => {
         album: state.album,
         user: state.user,
         searchResult: state.searchResult,
-        setToken,        
+        mySavedAlbums: state.mySavedAlbums,
+        mySavedTracks: state.mySavedTracks,
+        setToken,
         auth,
         logout,
         getPlaylists,
@@ -245,10 +239,13 @@ const State = (props) => {
         getPlaylist,
         setTokenIsSet,
         search,
-        saveAlbum,
+        // saveAlbum,
         addToPlaylist,
         createPlaylist,
-        play
+        addToMySavedAlbums,
+        getMySavedAlbums,
+        addToMySavedTracks,
+        getMySavedTracks
       }}
     >
       {props.children}

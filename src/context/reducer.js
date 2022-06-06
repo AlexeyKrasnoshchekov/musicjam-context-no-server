@@ -4,7 +4,9 @@ export const SET_TOKEN_IS_SET = "SET_TOKEN_IS_SET";
 export const SET_URL_IS_SET = "SET_URL_IS_SET";
 export const SET_PLAYLISTS = "SET_PLAYLISTS";
 export const SET_PLAYLIST = "SET_PLAYLIST";
+export const SET_MY_TRACKS = "SET_MY_TRACKS";
 export const SET_ALBUM = "SET_ALBUM";
+export const SET_MY_ALBUMS = "SET_MY_ALBUMS";
 export const SET_USER = "SET_USER";
 export const CHANGE_TOTAL = "CHANGE_TOTAL";
 export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
@@ -26,6 +28,18 @@ export const SET_SEARCH_RESULT = "SET_SEARCH_RESULT";
         return {
           ...state,
           playlists: [...state.playlists, action.payload],
+          // loading: false,
+        };
+      case SET_MY_ALBUMS:
+        return {
+          ...state,
+          mySavedAlbums: [...state.mySavedAlbums, action.payload],
+          // loading: false,
+        };
+      case SET_MY_TRACKS:
+        return {
+          ...state,
+          mySavedTracks: [...state.mySavedTracks, action.payload],
           // loading: false,
         };
   

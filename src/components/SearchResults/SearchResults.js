@@ -6,7 +6,7 @@ import Track from "../Track/Track";
 import './SearchResults.css';
 
 export default function SearchResults() {
-  const { searchResult, getAlbum } = useContext(context);
+  const { searchResult, getAlbum, addToMySavedAlbums } = useContext(context);
   console.log("searchResult222", searchResult);
   const history = useHistory();
   const handleGetAlbum = async (id) => {
@@ -28,6 +28,7 @@ export default function SearchResults() {
                       key={index}
                       albumId={album.id}
                       getAlbum={handleGetAlbum}
+                      addAlbum={addToMySavedAlbums}
                       name={album.name}
                       releaseDate={album.release_date}
                       tracksTotal={album.total_tracks}
