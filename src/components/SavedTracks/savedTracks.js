@@ -16,7 +16,7 @@ export default function SavedAlbums() {
       title: "Artist",
       key: "artist",
       dataIndex: "artist",
-      render: (text) => <a>{text}</a>,
+      // render: (text) => <a href="#" onClick={() => {handleArtistSearch(text)}}>{text}</a>,
     },
     {
       title: "Added",
@@ -43,10 +43,19 @@ export default function SavedAlbums() {
   ];
 
   const formatData = () => {
-    
     // let dataArr = [];
     mySavedTracks.length !== 0 &&
-      mySavedTracks.forEach((item) => setData1(item.added_at, item.track.name, item.track.artists[0].name, item.track.album.name, item.track.album.release_date, item.track.duration_ms));
+      mySavedTracks.forEach((item) => {
+        
+        setData1(
+          item.added_at.split("T")[0],
+          item.track.name,
+          item.track.artists[0].name,
+          item.track.album.name,
+          item.track.album.release_date,
+          item.track.duration_ms / 1000
+        );
+      });
   };
 
   const setData1 = (added, name, artist, album, released, duration) => {
@@ -59,18 +68,21 @@ export default function SavedAlbums() {
       duration: "",
     };
 
+    let duration_min = Math.floor(duration / 60);
+    let duration_sec = Math.round(duration % 60);
+
     obj.added = added;
     obj.name = name;
     obj.artist = artist;
     obj.album = album;
     obj.released = released;
-    obj.duration = duration;
+    obj.duration = `${duration_min}:${duration_sec}`;
     console.log("data888", data);
     setData((data) => [...data, obj]);
   };
 
   console.log("mySavedTracks", mySavedTracks);
-  
+
   // const { playlists, getAlbum, getPlaylists, getPlaylist, search, mySavedAlbums, getMySavedAlbums, mySavedTracks, getMySavedTracks } = useContext(context);
   const initialRender = useRef(true);
 

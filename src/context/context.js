@@ -132,6 +132,14 @@ const State = (props) => {
       console.log(error);
     }
   };
+  const removeFromPlaylist = async (playlistId, uri) => {
+    try {
+      await spotifyApi.removeTracksFromPlaylist(playlistId, [uri]);
+      console.log("removeTracksFromPlaylist", playlistId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const addToMySavedAlbums = async (albumId) => {
     console.log("albumId", albumId);
     console.log("albumId2", typeof albumId);
@@ -241,6 +249,7 @@ const State = (props) => {
         search,
         // saveAlbum,
         addToPlaylist,
+        removeFromPlaylist,
         createPlaylist,
         addToMySavedAlbums,
         getMySavedAlbums,
