@@ -6,12 +6,18 @@ import Track from "../Track/Track";
 import './SearchResults.css';
 
 export default function SearchResults() {
-  const { searchResult, getAlbum, addToMySavedAlbums } = useContext(context);
+  const { searchResult, getAlbum, addToMySavedAlbums, clearSavedAlbums, getMySavedAlbums } = useContext(context);
   console.log("searchResult222", searchResult);
   const history = useHistory();
   const handleGetAlbum = async (id) => {
     await getAlbum(id);
     history.push(`/album/${id}`)
+  }
+
+  const handleAddToMyAlbums = async (albumId) => {
+    await addToMySavedAlbums(albumId);
+    await clearSavedAlbums();
+    await getMySavedAlbums();
   }
 
   return (
@@ -28,7 +34,7 @@ export default function SearchResults() {
                       key={index}
                       albumId={album.id}
                       getAlbum={handleGetAlbum}
-                      addAlbum={addToMySavedAlbums}
+                      addAlbum={handleAddToMyAlbums}
                       name={album.name}
                       releaseDate={album.release_date}
                       tracksTotal={album.total_tracks}

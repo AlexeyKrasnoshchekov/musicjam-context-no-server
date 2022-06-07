@@ -3,7 +3,7 @@ import { context } from "../../context/context";
 import { Table, Space } from "antd";
 
 export default function SavedAlbums() {
-  const { mySavedTracks } = useContext(context);
+  const { mySavedTracks, removeFromMySavedTracks } = useContext(context);
   const [data, setData] = useState([]);
 
   const columns = [
@@ -51,7 +51,6 @@ export default function SavedAlbums() {
     // let dataArr = [];
     mySavedTracks.length !== 0 &&
       mySavedTracks.forEach((item) => {
-        
         setData1(
           item.added_at.split("T")[0],
           item.track.name,
@@ -82,7 +81,7 @@ export default function SavedAlbums() {
     obj.album = album;
     obj.released = released;
     obj.duration = `${duration_min}:${duration_sec}`;
-    console.log("data888", data);
+    // setData([]);
     setData((data) => [...data, obj]);
   };
 
@@ -96,8 +95,34 @@ export default function SavedAlbums() {
       initialRender.current = false;
       return;
     }
+    mySavedTracks.length !==0 && setData([]);
     formatData();
   }, []);
 
-  return <>{data && <Table columns={columns} dataSource={data} />}</>;
+  useEffect(() => {
+    mySavedTracks.length !==0 && setData([]);
+    formatData();
+  }, [mySavedTracks]);
+
+  const handleSavedTrackDelete = async (rowIndex) => {
+    await removeFromMySavedTracks(rowIndex);
+    await formatData();
+  }
+
+  return (
+    <>
+      {data && (
+        <Table
+          columns={columns}
+          dataSource={data}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {handleSavedTrackDelete(rowIndex)}, // click row
+
+            };
+          }}
+        />
+      )}
+    </>
+  );
 }

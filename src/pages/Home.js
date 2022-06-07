@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import Container from "../components/Container/Container";
+import Recomendations from "../components/Recomendations/Recomendations";
 import { context } from "../context/context";
 
 export default function Home() {
@@ -16,5 +17,13 @@ export default function Home() {
     token !== "" && auth();
     setIsAuth(true);
   }, []);
-  return <div style={{height: '100%'}}>{isAuth && <Container></Container>}</div>;
+  return (
+    <div style={{ height: "100%" }}>
+      {isAuth && (
+        <Container>
+          <Recomendations />
+        </Container>
+      )}
+    </div>
+  );
 }

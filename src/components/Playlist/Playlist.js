@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { context } from "../../context/context";
 import Track from "../Track/Track";
 import "./Playlist.css";
-import AudioPlayer from 'react-h5-audio-player';
+// import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
 export default function Playlist() {
@@ -80,14 +80,15 @@ export default function Playlist() {
               <div className="playlist-tracks">
                 {playlistItems.map((item, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <Track
-                      key={index}
+                      
                       date={item.added_at}
                       albumId={item.track.album.id}
                       getAlbum={handleGetAlbum}
                       artist={item.track.artists[0].name}
                       track={item.track.name}
+                      trackId={item.track.id}
                       album={item.track.album.name}
                       releaseDate={item.track.album.release_date}
                     />
@@ -100,7 +101,7 @@ export default function Playlist() {
           </div>
         </div>
       )}
-      <AudioPlayer />
+      {/* <AudioPlayer /> */}
     </div>
   );
 }

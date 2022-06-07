@@ -15,7 +15,10 @@ import {
   SET_SEARCH_RESULT,
   DELETE_PLAYLIST_ITEM,
   SET_PLAYLIST_ITEMS,
-  DELETE_MY_TRACKS_ITEM
+  DELETE_MY_TRACKS_ITEM,
+  CLEAR_SAVED_TRACKS,
+  CLEAR_SAVED_ALBUMS,
+  CLEAR_PLAYLISTS
 } from "./reducer";
 
 export const context = createContext();
@@ -188,23 +191,42 @@ const State = (props) => {
     }
   };
   const addToMySavedTracks = async (trackId) => {
-    console.log("albumId", trackId);
+    // console.log("albumId", track);
     try {
-      await spotifyApi.addToMySavedAlbums([trackId]);
+      await spotifyApi.addToMySavedTracks([trackId]);
+
     } catch (error) {
       console.log(error);
     }
   };
-  const removeFromMySavedTracks = async (trackId) => {
+  const removeFromMySavedTracks = async (savedTrackIndex) => {
     // console.log("removeTracksFromPlaylist1", playlistId);
-    // console.log("removeTracksFromPlaylist2", uri);
+    
+    const savedTrackId = state.mySavedTracks.filter((_, index) => index === savedTrackIndex)[0].track.id;
+    console.log("removeTracksFromPlaylist2", savedTrackId);
     try {
-      await spotifyApi.removeFromMySavedTracks([trackId]);
-      console.log("removeTracksFromPlaylist", trackId);
+      await spotifyApi.removeFromMySavedTracks([savedTrackId]);
+      // console.log("removeTracksFromPlaylist", trackId);
       await dispatch({
         type: DELETE_MY_TRACKS_ITEM,
-        payload: trackId,
+        payload: savedTrackId,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const removeFromMySavedAlbums = async (albumId) => {
+    // console.log("removeTracksFromPlaylist1", playlistId);
+    
+    // const savedTrackId = state.mySavedTracks.filter((_, index) => index === savedTrackIndex)[0].track.id;
+    console.log("removeTracksFromPlaylist2", albumId);
+    try {
+      await spotifyApi.removeFromMySavedAlbums([albumId]);
+      // console.log("removeTracksFromPlaylist", trackId);
+      // await dispatch({
+      //   type: DELETE_MY_TRACKS_ITEM,
+      //   payload: savedTrackId,
+      // });
     } catch (error) {
       console.log(error);
     }
@@ -224,6 +246,25 @@ const State = (props) => {
           });
         }
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getRecommendations = async () => {
+    console.log("getRecommendations");
+    try {
+      let data = await spotifyApi.getRecommendations();
+      console.log("getRecommendations", data);
+      // if (data) {
+      //   if (data.items.length !== 0) {
+      //     data.items.forEach((item) => {
+      //       dispatch({
+      //         type: SET_MY_TRACKS,
+      //         payload: item,
+      //       });
+      //     });
+      //   }
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -260,6 +301,10 @@ const State = (props) => {
     }
   };
 
+  const clearSavedTracks = () => dispatch({ type: CLEAR_SAVED_TRACKS });
+  const clearSavedAlbums = () => dispatch({ type: CLEAR_SAVED_ALBUMS });
+  const clearPlaylists = () => dispatch({ type: CLEAR_PLAYLISTS });
+
   return (
     <context.Provider
       value={{
@@ -289,7 +334,12 @@ const State = (props) => {
         getMySavedAlbums,
         addToMySavedTracks,
         removeFromMySavedTracks,
-        getMySavedTracks
+        getMySavedTracks,
+        clearSavedTracks,
+        clearSavedAlbums,
+        removeFromMySavedAlbums,
+        clearPlaylists,
+        getRecommendations
       }}
     >
       {props.children}

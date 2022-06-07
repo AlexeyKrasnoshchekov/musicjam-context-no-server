@@ -5,7 +5,7 @@ import "./album.css";
 
 export default function Album() {
   const [imageIndex, setImageIndex] = useState(0);
-  const { album, saveAlbum } = useContext(context);
+  const { album, addToMySavedAlbums, clearSavedAlbums, getMySavedAlbums, removeFromMySavedAlbums } = useContext(context);
 
   const handlePrevButton = () => {
     if (imageIndex > 0 && imageIndex <= album.images.length) {
@@ -29,6 +29,19 @@ export default function Album() {
       });
     }
   };
+
+  const handleAddToMyAlbums = async (albumId) => {
+    await addToMySavedAlbums(albumId);
+    await clearSavedAlbums();
+    await getMySavedAlbums();
+  }
+  const handleDeleteFromMyAlbums = async (albumId) => {
+    await removeFromMySavedAlbums(albumId);
+    await clearSavedAlbums();
+    await getMySavedAlbums();
+  }
+
+  
 
   return (
     <div>
@@ -66,7 +79,8 @@ export default function Album() {
           )}
 
           <div className="album-tracks-container">
-            <div onClick={() => saveAlbum(album.id)}>save</div>
+            <div onClick={() => handleAddToMyAlbums(album.id)}>save</div>
+            <div onClick={() => handleDeleteFromMyAlbums(album.id)}>unsave</div>
             <h3>{album.tracks.items[0].artists[0].name}</h3>
             <h3>{album.name}</h3>
             {album.tracks.items.length !== 0 && (
@@ -76,9 +90,11 @@ export default function Album() {
                     <Track
                       key={index}
                       track={item.name}
+                      trackItem={item}
                       trackNumber={item.track_number}
                       duration={item.duration_ms / 1000}
                       uri={item.uri}
+                      trackId={item.id}
                     />
                   );
                 })}

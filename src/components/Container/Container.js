@@ -1,8 +1,8 @@
 import Header1 from "../Header/Header";
 import "./container.css";
 
-import { Layout, Menu, icons, AutoComplete } from "antd";
-import { UnorderedListOutlined } from "@ant-design/icons";
+import { Layout, Menu, icons, AutoComplete, Modal, Input } from "antd";
+import { UnorderedListOutlined, PlaySquareOutlined, HeartOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Playlists from "../Playlists/Playlists";
 import { context } from "../../context/context";
@@ -10,13 +10,25 @@ import { useHistory } from "react-router-dom";
 import SubMenu from "antd/lib/menu/SubMenu";
 const { Header, Content, Footer, Sider } = Layout;
 
-
-
 const Container = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const { playlists, getAlbum, getPlaylists, getPlaylist, search, mySavedAlbums, getMySavedAlbums, mySavedTracks, getMySavedTracks } = useContext(context);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [value, setValue] = useState("");
+  const {
+    playlists,
+    createPlaylist,
+    getAlbum,
+    getPlaylists,
+    getPlaylist,
+    search,
+    mySavedAlbums,
+    getMySavedAlbums,
+    mySavedTracks,
+    getMySavedTracks,
+    clearPlaylists
+  } = useContext(context);
+
+  const [playlistName, setPlaylistName] = useState("");
   const [options, setOptions] = useState([]);
 
   const initialRender = useRef(true);
@@ -31,6 +43,21 @@ const Container = (props) => {
   //   // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
   //   // getItem('Files', '9', <FileOutlined />),
   // ];
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = async () => {
+    await createPlaylist(playlistName);
+    await clearPlaylists();
+    await getPlaylists();
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const mockVal = (str, repeat = 1) => ({
     value: str.repeat(repeat),
@@ -49,9 +76,9 @@ const Container = (props) => {
     history.push("/search");
   };
 
-  const onChange = (data) => {
-    setValue(data);
-  };
+  // const onChange = (data) => {
+  //   setValue(data);
+  // };
 
   const handlePlaylistClick = async (id: string) => {
     console.log("111222");
@@ -61,28 +88,10 @@ const Container = (props) => {
 
   const handleGetAlbum = async (id) => {
     await getAlbum(id);
-    history.push(`/album/${id}`)
-  }
+    history.push(`/album/${id}`);
+  };
 
-  const items3 = [UnorderedListOutlined].map((icon, index) => {
-    const key = String(index + 1);
-    const length = playlists.length;
-    return {
-      key: `sub${key}`,
-      icon: React.createElement(icon),
-      label: `Playlists`,
-      children: playlists.map((playlist, j) => {
-        const subKey = index * length + j + 1;
-        return {
-          key: subKey,
-          id: playlist.id,
-          label: `${playlist.name} (${playlist.tracks.total})`,
-        };
-      }),
-    };
-  });
-
-  console.log('mySavedAlbums', mySavedAlbums)
+  console.log("mySavedAlbums", mySavedAlbums);
 
   useEffect(() => {
     if (initialRender.current) {
@@ -122,19 +131,54 @@ const Container = (props) => {
             height: "100%",
           }}
         >
-          <SubMenu key="sub1" title="Playlists">
-            {playlists.map((playlist, index) => {
-              const subKey = playlists.length + index + 1;
-              return <Menu.Item key={subKey} onClick={() => {handlePlaylistClick(playlist.id)}}>{playlist.name}</Menu.Item>
-            })}
+          <SubMenu key="sub1" title="Playlists" icon={<UnorderedListOutlined/>}>
+            <>
+              <div onClick={() => showModal()}>Create</div>
+              <Modal
+                title="New playlist"
+                visible={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+              >
+                <Input maxLength={20} onChange={(e) => {setPlaylistName(e.target.value)}} placeholder="enter playlist name" />
+              </Modal>
+              {playlists.map((playlist, index) => {
+                const subKey = playlists.length + index + 1;
+                return (
+                  <Menu.Item
+                    key={subKey}
+                    onClick={() => {
+                      handlePlaylistClick(playlist.id);
+                    }}
+                  >
+                    {playlist.name}
+                  </Menu.Item>
+                );
+              })}
+            </>
           </SubMenu>
-          <SubMenu key="sub2" title="Saved Albums">
+          <SubMenu key="sub2" title="Saved Albums" icon={<PlaySquareOutlined />}>
             {mySavedAlbums.map((item, index) => {
               const subKey = mySavedAlbums.length + index + 1;
-              return <Menu.Item key={subKey} onClick={() => {handleGetAlbum(item.album.id)}}>{`${item.album.name} (${item.album.artists[0].name})`}</Menu.Item>
+              return (
+                <Menu.Item
+                  key={subKey}
+                  onClick={() => {
+                    handleGetAlbum(item.album.id);
+                  }}
+                >{`${item.album.name} (${item.album.artists[0].name})`}</Menu.Item>
+              );
             })}
           </SubMenu>
-          <Menu.Item key="1" onClick={() => {history.push(`/savedtracks`)}}>Saved Tracks</Menu.Item>
+          <Menu.Item
+            key="1"
+            icon={<HeartOutlined />}
+            onClick={() => {
+              history.push(`/savedtracks`);
+            }}
+          >
+            Saved Tracks
+          </Menu.Item>
           {/* <SubMenu key="sub3" title="Saved Tracks">
             {mySavedAlbums.map((item, index) => {
               const subKey = mySavedAlbums.length + index + 1;
