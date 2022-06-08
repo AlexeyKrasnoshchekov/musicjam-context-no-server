@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../../context/context";
 import { Table, Space } from "antd";
+import { useHistory } from "react-router-dom";
 
 export default function SavedAlbums() {
-  const { mySavedTracks, removeFromMySavedTracks } = useContext(context);
+  const { mySavedTracks, removeFromMySavedTracks, searchAlbum, searchResult } = useContext(context);
   const [data, setData] = useState([]);
+  const history = useHistory();
 
   const columns = [
     {
@@ -28,6 +30,12 @@ export default function SavedAlbums() {
       dataIndex: "album",
       key: "album",
       render: (text) => <a>{text}</a>,
+      onCell: (record, rowIndex) => {
+        return {
+          onClick: (event) => {handleGetAlbum(record)}, // click row
+
+        };
+      }
     },
     {
       title: "Released",
@@ -44,8 +52,24 @@ export default function SavedAlbums() {
       title: "Del",
       key: "del",
       render: () => <b>Del</b>,
+      onCell: (record, rowIndex) => {
+        return {
+          onClick: (event) => {handleSavedTrackDelete(rowIndex)}, // click row
+
+        };
+      }
     },
   ];
+
+  const handleGetAlbum = (record) => {
+    searchAlbum(record);
+    history.push("/search");
+    // console.log('searchResult', searchResult);
+    // setTimeout(() => {
+    //   history.push(`/search`);
+    // }, 3000)
+    
+  }
 
   const formatData = () => {
     // let dataArr = [];
@@ -106,7 +130,8 @@ export default function SavedAlbums() {
 
   const handleSavedTrackDelete = async (rowIndex) => {
     await removeFromMySavedTracks(rowIndex);
-    await formatData();
+    mySavedTracks.length !==0 && setData([]);
+    formatData();
   }
 
   return (
@@ -115,12 +140,7 @@ export default function SavedAlbums() {
         <Table
           columns={columns}
           dataSource={data}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {handleSavedTrackDelete(rowIndex)}, // click row
-
-            };
-          }}
+          
         />
       )}
     </>

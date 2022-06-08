@@ -3,32 +3,38 @@ import { useHistory } from "react-router-dom";
 import { context } from "../../context/context";
 import Item from "../Item/Item";
 import Track from "../Track/Track";
-import './SearchResults.css';
+import "./SearchResults.css";
 
 export default function SearchResults() {
-  const { searchResult, getAlbum, addToMySavedAlbums, clearSavedAlbums, getMySavedAlbums } = useContext(context);
+  const {
+    searchResult,
+    getAlbum,
+    addToMySavedAlbums,
+    clearSavedAlbums,
+    getMySavedAlbums,
+  } = useContext(context);
   console.log("searchResult222", searchResult);
   const history = useHistory();
   const handleGetAlbum = async (id) => {
     await getAlbum(id);
-    history.push(`/album/${id}`)
-  }
+    history.push(`/album/${id}`);
+  };
 
   const handleAddToMyAlbums = async (albumId) => {
     await addToMySavedAlbums(albumId);
     await clearSavedAlbums();
     await getMySavedAlbums();
-  }
+  };
 
   return (
     <div>
       {searchResult && (
         <div>
-          {searchResult.albums.items.length !== 0 && (
-            <div>
-              <div>albums</div>
-              <div className="albums-grid">
-                {searchResult.albums.items.map((album, index) => {
+          {searchResult.albums && <div>
+            <div>albums</div>
+            <div className="albums-grid">
+              {searchResult.albums.items.length !== 0 &&
+                searchResult.albums.items.map((album, index) => {
                   return (
                     <Item
                       key={index}
@@ -43,9 +49,9 @@ export default function SearchResults() {
                     />
                   );
                 })}
-              </div>
             </div>
-          )}
+          </div>}
+          )
           {searchResult.artists.items.length !== 0 && (
             <div>
               <div>artists</div>

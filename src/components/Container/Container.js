@@ -1,7 +1,7 @@
 import Header1 from "../Header/Header";
 import "./container.css";
 
-import { Layout, Menu, icons, AutoComplete, Modal, Input } from "antd";
+import { Layout, Menu, icons, AutoComplete, Modal, Input, Button } from "antd";
 import { UnorderedListOutlined, PlaySquareOutlined, HeartOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Playlists from "../Playlists/Playlists";
@@ -25,7 +25,8 @@ const Container = (props) => {
     getMySavedAlbums,
     mySavedTracks,
     getMySavedTracks,
-    clearPlaylists
+    clearPlaylists,
+    clearPlaylistItems
   } = useContext(context);
 
   const [playlistName, setPlaylistName] = useState("");
@@ -82,6 +83,7 @@ const Container = (props) => {
 
   const handlePlaylistClick = async (id: string) => {
     console.log("111222");
+    await clearPlaylistItems();
     await getPlaylist(id);
     history.push("/playlist");
   };
@@ -133,7 +135,11 @@ const Container = (props) => {
         >
           <SubMenu key="sub1" title="Playlists" icon={<UnorderedListOutlined/>}>
             <>
-              <div onClick={() => showModal()}>Create</div>
+              <Menu.Item
+                    key="1"
+                  >
+                    <Button onClick={() => showModal()}>Create</Button>
+                  </Menu.Item>
               <Modal
                 title="New playlist"
                 visible={isModalVisible}
@@ -153,6 +159,7 @@ const Container = (props) => {
                   >
                     {playlist.name}
                   </Menu.Item>
+                  
                 );
               })}
             </>
@@ -207,13 +214,13 @@ const Container = (props) => {
             {props.children}
           </div>
         </Content>
-        <Footer
+        {/* <Footer
           style={{
             textAlign: "center",
           }}
         >
           Ant Design ©2018 Created by Ant UED
-        </Footer>
+        </Footer> */}
       </Layout>
     </Layout>
   );

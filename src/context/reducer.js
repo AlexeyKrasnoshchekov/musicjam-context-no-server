@@ -17,6 +17,7 @@ export const DELETE_MY_TRACKS_ITEM = "DELETE_MY_TRACKS_ITEM";
 export const CLEAR_SAVED_TRACKS = "CLEAR_SAVED_TRACKS";
 export const CLEAR_SAVED_ALBUMS = "CLEAR_SAVED_ALBUMS";
 export const CLEAR_PLAYLISTS = "CLEAR_PLAYLISTS";
+export const CLEAR_PLAYLIST_ITEMS = "CLEAR_PLAYLIST_ITEMS";
 
 
 // export const SET_LOCATION = "SET_LOCATION";
@@ -122,6 +123,12 @@ export const CLEAR_PLAYLISTS = "CLEAR_PLAYLISTS";
           return {
             ...state,
             playlists: [],
+          };
+        }
+        case CLEAR_PLAYLIST_ITEMS: {
+          return {
+            ...state,
+            playlistItems: [],
           };
         }
 

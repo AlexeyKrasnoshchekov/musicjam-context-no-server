@@ -70,12 +70,10 @@ function Track({
         })}
       </Select> */}
       <Dropdown overlay={menu} >
-        {/* <a onClick={(e) => e.preventDefault()}> */}
           <Space>
             Add to Playlist
             {/* <DownOutlined /> */}
           </Space>
-        {/* </a> */}
       </Dropdown>
       <div
         onClick={() => {

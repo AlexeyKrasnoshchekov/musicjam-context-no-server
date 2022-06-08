@@ -18,7 +18,8 @@ import {
   DELETE_MY_TRACKS_ITEM,
   CLEAR_SAVED_TRACKS,
   CLEAR_SAVED_ALBUMS,
-  CLEAR_PLAYLISTS
+  CLEAR_PLAYLISTS,
+  CLEAR_PLAYLIST_ITEMS,
 } from "./reducer";
 
 export const context = createContext();
@@ -34,6 +35,7 @@ const State = (props) => {
     playlistItems: [],
     playlist: null,
     album: null,
+    albumId: "",
     searchResult: null,
     user: "",
     total: [],
@@ -139,6 +141,7 @@ const State = (props) => {
       console.log(error);
     }
   };
+ 
 
   const addToPlaylist = async (playlistId, uri) => {
     try {
@@ -300,10 +303,25 @@ const State = (props) => {
       console.log(error);
     }
   };
+  const searchAlbum = async (albumName) => {
+    console.log("albumName", albumName);
+    const types = ["album"];
+    try {
+      let data = await spotifyApi.search(albumName, types, { limit: 5 });
+      dispatch({
+        type: SET_SEARCH_RESULT,
+        payload: data,
+      });
+      // console.log("data999", state.album);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const clearSavedTracks = () => dispatch({ type: CLEAR_SAVED_TRACKS });
   const clearSavedAlbums = () => dispatch({ type: CLEAR_SAVED_ALBUMS });
   const clearPlaylists = () => dispatch({ type: CLEAR_PLAYLISTS });
+  const clearPlaylistItems = () => dispatch({ type: CLEAR_PLAYLIST_ITEMS });
 
   return (
     <context.Provider
@@ -339,7 +357,9 @@ const State = (props) => {
         clearSavedAlbums,
         removeFromMySavedAlbums,
         clearPlaylists,
-        getRecommendations
+        clearPlaylistItems,
+        getRecommendations,
+        searchAlbum
       }}
     >
       {props.children}
