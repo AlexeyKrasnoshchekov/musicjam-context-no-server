@@ -3,8 +3,6 @@ import { useHistory } from "react-router-dom";
 import { context } from "../../context/context";
 import Track from "../Track/Track";
 import "./Playlist.css";
-// import AudioPlayer from 'react-h5-audio-player';
-import "react-h5-audio-player/lib/styles.css";
 import { Col, Image, Row, Table, Typography } from "antd";
 import { DeleteOutlined, HeartOutlined } from "@ant-design/icons";
 
