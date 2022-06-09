@@ -1,5 +1,16 @@
 import { HeartOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Col, Divider, Dropdown, Image, Menu, Row, Space, Table, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Dropdown,
+  Image,
+  Menu,
+  Row,
+  Space,
+  Table,
+  Typography,
+} from "antd";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../../context/context";
@@ -8,6 +19,7 @@ import "./album.css";
 
 export default function Album() {
   const [imageIndex, setImageIndex] = useState(0);
+  const [albumIsSaved, setAlbumIsSaved] = useState(false);
   // const [trackUri, setTrackUri] = useState("");
   // const [trackId, setTrackId] = useState("");
 
@@ -25,6 +37,7 @@ export default function Album() {
     addToMySavedTracks,
     clearSavedTracks,
     getMySavedTracks,
+    mySavedAlbums
   } = useContext(context);
 
   const handlePrevButton = () => {
@@ -57,6 +70,7 @@ export default function Album() {
       initialRender.current = false;
       return;
     }
+    checkForSavedAlbum();
     album.tracks.items.length !== 0 && setData([]);
     formatData();
   }, []);
@@ -66,22 +80,6 @@ export default function Album() {
     formatData();
   }, [album]);
 
-  const menu = (
-    <Menu>
-      {playlists.map((playlist, index) => {
-        return (
-          <Menu.Item
-            key={index}
-            onClick={() => {
-              handleAddToPlaylist(playlist.id);
-            }}
-          >
-            {playlist.name}
-          </Menu.Item>
-        );
-      })}
-    </Menu>
-  );
 
   const columns = [
     {
@@ -185,15 +183,17 @@ export default function Album() {
     setData((data) => [...data, obj]);
   };
 
-  const handleAddToMyAlbums = async (albumId) => {
-    await addToMySavedAlbums(albumId);
+  const handleAddToMyAlbums = async () => {
+    await addToMySavedAlbums(album.id);
     await clearSavedAlbums();
     await getMySavedAlbums();
+    setAlbumIsSaved(state => !state);
   };
-  const handleDeleteFromMyAlbums = async (albumId) => {
-    await removeFromMySavedAlbums(albumId);
+  const handleDeleteFromMyAlbums = async () => {
+    await removeFromMySavedAlbums(album.id);
     await clearSavedAlbums();
     await getMySavedAlbums();
+    setAlbumIsSaved(state => !state);
   };
   const handleAddTrack = async (trackId) => {
     console.log("trackId", trackId);
@@ -206,23 +206,36 @@ export default function Album() {
     addToPlaylist(playlistId, trackUri);
   };
 
+  const checkForSavedAlbum = () => {
+    console.log('mySavedAlbums', mySavedAlbums);
+    mySavedAlbums.length !==0 && mySavedAlbums.forEach(savedAlbum => {
+      console.log('savedAlbum.id', savedAlbum.album.id);
+      console.log('album.id', album.id);
+      if (savedAlbum.album.id === album.id) {
+        console.log('папапа');
+        setAlbumIsSaved(true);
+      }
+    })
+  }
+  
+
   return (
     <>
       <Row>
         <Col span={8}>
-          <Image
-            width={300}
-            src={album.images[imageIndex].url}
-          />
+          <Image width={300} src={album.images[imageIndex].url} />
         </Col>
         <Col span={16}>
-        <Title level={2}>{`${album.tracks.items[0].artists[0].name} - ${album.name}`}</Title>
-        <Title level={4}>{`Released: ${album.release_date}`}</Title>
-        <Title level={4}>{`Popularity: ${album.popularity}`}</Title>
-        <Title level={4}>{`Total tracks: ${album.total_tracks}`}</Title>
+          <Title
+            level={2}
+          >{`${album.tracks.items[0].artists[0].name} - ${album.name}`}</Title>
+          <Title level={4}>{`Released: ${album.release_date}`}</Title>
+          <Title level={4}>{`Popularity: ${album.popularity}`}</Title>
+          <Title level={4}>{`Total tracks: ${album.total_tracks}`}</Title>
+          {albumIsSaved ? <Button onClick={() => handleDeleteFromMyAlbums()}>Unsave</Button> : <Button onClick={() => handleAddToMyAlbums()}>Save</Button>}
         </Col>
       </Row>
-      <Divider plain={true}/>
+
       <Row>
         <Col span={24}>
           {data && (
@@ -231,66 +244,5 @@ export default function Album() {
         </Col>
       </Row>
     </>
-
-    // <div>
-    //   {album.images && (
-    //     <div
-    //       className="album-inner-container"
-    //       style={{ outline: "2px solid red" }}
-    //     >
-    //       {album.images.length !== 0 && (
-    //         <div
-    //           style={{
-    //             backgroundImage: `url(${album.images[imageIndex].url})`,
-    //           }}
-    //           className="album-image"
-    //           alt="album picture"
-    //         >
-    //           {album.images.length > 1 && (
-    //             <div
-    //               style={{ fontSize: "18px", outline: "2px solid red" }}
-    //               onClick={handlePrevButton}
-    //             >
-    //               {"<"}
-    //             </div>
-    //           )}
-
-    //           {album.images.length > 1 && (
-    //             <div
-    //               style={{ fontSize: "18px", outline: "2px solid red" }}
-    //               onClick={handleNextButton}
-    //             >
-    //               {">"}
-    //             </div>
-    //           )}
-    //         </div>
-    //       )}
-
-    //       <div className="album-tracks-container">
-    //         <div onClick={() => handleAddToMyAlbums(album.id)}>save</div>
-    //         <div onClick={() => handleDeleteFromMyAlbums(album.id)}>unsave</div>
-    //         <h3>{album.tracks.items[0].artists[0].name}</h3>
-    //         <h3>{album.name}</h3>
-    //         {album.tracks.items.length !== 0 && (
-    //           <div className="album-tracks">
-    //             {album.tracks.items.map((item, index) => {
-    //               return (
-    //                 <Track
-    //                   key={index}
-    //                   track={item.name}
-    //                   trackItem={item}
-    //                   trackNumber={item.track_number}
-    //                   duration={item.duration_ms / 1000}
-    //                   uri={item.uri}
-    //                   trackId={item.id}
-    //                 />
-    //               );
-    //             })}
-    //           </div>
-    //         )}
-    //       </div>
-    //     </div>
-    //   )}
-    // </div>
   );
 }
