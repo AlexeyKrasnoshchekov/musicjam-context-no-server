@@ -5,7 +5,7 @@ import { getAccessToken, setUrl } from "../util/Spotify";
 import { Button, Col, Row, Space, Divider } from "antd";
 
 export default function Login() {
-  const { setToken, setTokenIsSet, token } = useContext(context);
+  const { setToken, setTokenIsSet, token, setTokenExpiresIn } = useContext(context);
   const [authUrlIsSet, setAuthUrlIsSet] = useState(false);
 
   const initialRender = useRef(true);
@@ -19,7 +19,9 @@ export default function Login() {
 
     if (location.hash) {
       const tokenLocal = getAccessToken();
-      setToken(tokenLocal);
+      console.log('tokenLocal',tokenLocal);
+      setTokenExpiresIn(tokenLocal.expiresIn);
+      setToken(tokenLocal.accessToken);
       setTokenIsSet(true);
     }
   }, [authUrlIsSet]);

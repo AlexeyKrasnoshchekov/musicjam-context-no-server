@@ -18,6 +18,7 @@ export const CLEAR_SAVED_TRACKS = "CLEAR_SAVED_TRACKS";
 export const CLEAR_SAVED_ALBUMS = "CLEAR_SAVED_ALBUMS";
 export const CLEAR_PLAYLISTS = "CLEAR_PLAYLISTS";
 export const CLEAR_PLAYLIST_ITEMS = "CLEAR_PLAYLIST_ITEMS";
+export const SET_TOKEN_EXPIRES_IN = "SET_TOKEN_EXPIRES_IN";
 
 
 // export const SET_LOCATION = "SET_LOCATION";
@@ -33,6 +34,12 @@ export const CLEAR_PLAYLIST_ITEMS = "CLEAR_PLAYLIST_ITEMS";
         return {
           ...state,
           token: action.payload,
+        };
+        case SET_TOKEN_EXPIRES_IN:
+        
+        return {
+          ...state,
+          expiresIn: action.payload,
         };
       case SET_PLAYLISTS:
         return {

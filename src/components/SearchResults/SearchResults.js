@@ -4,6 +4,9 @@ import { context } from "../../context/context";
 import Item from "../Item/Item";
 import Track from "../Track/Track";
 import "./SearchResults.css";
+import {
+  Card
+} from "antd";
 
 export default function SearchResults() {
   const {
@@ -36,36 +39,71 @@ export default function SearchResults() {
               {searchResult.albums.items.length !== 0 &&
                 searchResult.albums.items.map((album, index) => {
                   return (
-                    <Item
-                      key={index}
-                      albumId={album.id}
-                      getAlbum={handleGetAlbum}
-                      addAlbum={handleAddToMyAlbums}
-                      name={album.name}
-                      releaseDate={album.release_date}
-                      tracksTotal={album.total_tracks}
-                      artist={album.artists[0].name}
-                      images={album.images}
-                    />
+                    <Card
+                title="Default size card"
+                extra={<a href="#">More</a>}
+                style={{
+                  width: 300,
+                  height: 300,
+                  backgroundImage: `url(${album.images[1].url})`,
+                  
+                }}
+                bodyStyle={{height: 'calc(100% - 3rem', backgroundColor: 'rgba(000, 000, 000, 0.5)'}}
+                headStyle={{height:'3rem', backgroundColor: 'rgba(000, 000, 000, 0.5)'}}
+              >
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+              </Card>
+                    // <Item
+                    //   key={index}
+                    //   albumId={album.id}
+                    //   getAlbum={handleGetAlbum}
+                    //   addAlbum={handleAddToMyAlbums}
+                    //   name={album.name}
+                    //   releaseDate={album.release_date}
+                    //   tracksTotal={album.total_tracks}
+                    //   artist={album.artists[0].name}
+                    //   images={album.images}
+                    // />
                   );
                 })}
             </div>
           </div>}
+
+          
           )
           {searchResult.artists.items.length !== 0 && (
             <div>
               <div>artists</div>
               <div className="artists-grid">
-                {searchResult.artists.items.map((artist, index) => {
+                {searchResult.artists.items && searchResult.artists.items.map((artist, index) => {
+                  // console.log('artist.images[1]', artist.images[1].url)
                   return (
-                    <Item
-                      key={index}
-                      // date={item.added_at}
-                      name={artist.name}
-                      popularity={artist.popularity}
-                      genre={artist.genres[0]}
-                      images={artist.images}
-                    />
+                    <Card
+                title="Default size card"
+                extra={<a href="#">More</a>}
+                style={{
+                  width: 300,
+                  height: 300,
+                  // backgroundImage: `url(${artist.images[1].url !== undefined && artist.images[1].url})`,
+                  
+                }}
+                bodyStyle={{height: 'calc(100% - 3rem', backgroundColor: 'rgba(000, 000, 000, 0.5)'}}
+                headStyle={{height:'3rem', backgroundColor: 'rgba(000, 000, 000, 0.5)'}}
+              >
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+              </Card>
+                    // <Item
+                    //   key={index}
+                    //   // date={item.added_at}
+                    //   name={artist.name}
+                    //   popularity={artist.popularity}
+                    //   genre={artist.genres[0]}
+                    //   images={artist.images}
+                    // />
                   );
                 })}
               </div>

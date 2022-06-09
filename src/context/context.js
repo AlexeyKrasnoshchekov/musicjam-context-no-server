@@ -4,8 +4,8 @@ import SpotifyWebApi from "spotify-web-api-js";
 import reducer from "./reducer";
 import {
   SET_TOKEN,
+  SET_TOKEN_EXPIRES_IN,
   SET_TOKEN_IS_SET,
-  CHANGE_TOTAL,
   SET_PLAYLISTS,
   SET_PLAYLIST,
   SET_ALBUM,
@@ -27,6 +27,7 @@ export const context = createContext();
 const State = (props) => {
   const initialState = {
     token: "",
+    expiresIn: 0,
     tokenIsSet: false,
     urlIsSet: false,
     playlists: [],
@@ -48,6 +49,10 @@ const State = (props) => {
   const setToken = (token) => {
     console.log("token777", token);
     dispatch({ type: SET_TOKEN, payload: token });
+  };
+  const setTokenExpiresIn = (expiresIn) => {
+    console.log("expiresIn777", typeof expiresIn);
+    dispatch({ type: SET_TOKEN_EXPIRES_IN, payload: expiresIn });
   };
   const setTokenIsSet = (bool) =>
     dispatch({ type: SET_TOKEN_IS_SET, payload: bool });
@@ -359,7 +364,8 @@ const State = (props) => {
         clearPlaylists,
         clearPlaylistItems,
         getRecommendations,
-        searchAlbum
+        searchAlbum,
+        setTokenExpiresIn
       }}
     >
       {props.children}
