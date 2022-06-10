@@ -40,29 +40,6 @@ export default function Album() {
     mySavedAlbums
   } = useContext(context);
 
-  const handlePrevButton = () => {
-    if (imageIndex > 0 && imageIndex <= album.images.length) {
-      setImageIndex((prevState) => {
-        return { imageIndex: --prevState.imageIndex };
-      });
-    } else {
-      setImageIndex({
-        imageIndex: album.images.length - 1,
-      });
-    }
-  };
-  const handleNextButton = () => {
-    if (imageIndex >= 0 && imageIndex < album.images.length - 1) {
-      setImageIndex((prevState) => {
-        return { imageIndex: ++prevState.imageIndex };
-      });
-    } else {
-      setImageIndex({
-        imageIndex: 0,
-      });
-    }
-  };
-
   const initialRender = useRef(true);
 
   useEffect(() => {
@@ -223,7 +200,7 @@ export default function Album() {
     <>
       <Row>
         <Col span={8}>
-          <Image width={300} src={album.images[imageIndex].url} />
+          <Image width={300} src={album.images.length !== 0 && album.images[imageIndex].url} />
         </Col>
         <Col span={16}>
           <Title

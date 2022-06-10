@@ -2,14 +2,16 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../context/context";
 import { useLocation } from "react-router-dom";
 import { getAccessToken, setUrl } from "../util/Spotify";
-import { Button, Col, Row, Space, Divider } from "antd";
+import { Button, Col, Row, Divider } from "antd";
 
 export default function Login() {
-  const { setToken, setTokenIsSet, token, setTokenExpiresIn } = useContext(context);
+  const { setToken, setTokenIsSet, token } = useContext(context);
   const [authUrlIsSet, setAuthUrlIsSet] = useState(false);
 
   const initialRender = useRef(true);
   const location = useLocation();
+
+  // console.log('expiresIn', expiresIn);
 
   useEffect(() => {
     if (initialRender.current) {
@@ -20,8 +22,8 @@ export default function Login() {
     if (location.hash) {
       const tokenLocal = getAccessToken();
       console.log('tokenLocal',tokenLocal);
-      setTokenExpiresIn(tokenLocal.expiresIn);
-      setToken(tokenLocal.accessToken);
+      // setTokenExpiresIn(tokenLocal.expiresIn);
+      setToken(tokenLocal);
       setTokenIsSet(true);
     }
   }, [authUrlIsSet]);
@@ -34,6 +36,39 @@ export default function Login() {
       setTokenIsSet(true);
     }
   };
+
+  // const openNotification = () => {
+  //   notification.open({
+  //     message: 'Spotify token',
+  //     description:
+  //       'Token successfully refreshed, you can continue',
+  //     // onClick: () => {
+  //     //   console.log('Notification Clicked!');
+  //     // },
+  //   });
+  // };
+
+  setInterval(() => {
+    setUrl();
+
+    if (location.hash) {
+      const tokenLocal = getAccessToken();
+      console.log('tokenLocal',tokenLocal);
+      // setTokenExpiresIn(tokenLocal.expiresIn);
+      setToken(tokenLocal);
+      setTokenIsSet(true);
+    }
+
+    
+
+    // const data = await spotifyApi.refreshAccessToken();
+    // const access_token = data.body['access_token'];
+
+    // console.log('The access token has been refreshed!');
+    // console.log('access_token:', access_token);
+    // spotifyApi.setAccessToken(access_token);
+  }, 3600 * 1000); //one hour
+  // }, 20000);
 
   return (
     <>

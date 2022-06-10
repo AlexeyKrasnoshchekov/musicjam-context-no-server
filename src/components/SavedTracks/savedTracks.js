@@ -4,9 +4,12 @@ import { Table, Space } from "antd";
 import { useHistory } from "react-router-dom";
 
 export default function SavedAlbums() {
-  const { mySavedTracks, removeFromMySavedTracks, searchAlbum, searchResult } = useContext(context);
+  const { mySavedTracks, removeFromMySavedTracks, getAlbum } = useContext(context);
   const [data, setData] = useState([]);
   const history = useHistory();
+
+
+  console.log('mySavedTracks', mySavedTracks);
 
   const columns = [
     {
@@ -32,7 +35,11 @@ export default function SavedAlbums() {
       render: (text) => <a>{text}</a>,
       onCell: (record, rowIndex) => {
         return {
-          onClick: (event) => {handleGetAlbum(record)}, // click row
+          
+          onClick: (event) => {
+            let elem = mySavedTracks.filter((item, i) => rowIndex === i)[0];
+            handleGetAlbum(elem.track.album.id);
+          }, // click row
 
         };
       }
@@ -61,15 +68,10 @@ export default function SavedAlbums() {
     },
   ];
 
-  const handleGetAlbum = (record) => {
-    searchAlbum(record);
-    history.push("/search");
-    // console.log('searchResult', searchResult);
-    // setTimeout(() => {
-    //   history.push(`/search`);
-    // }, 3000)
-    
-  }
+  const handleGetAlbum = async (id) => {
+    await getAlbum(id);
+    history.push(`/album/${id}`);
+  };
 
   const formatData = () => {
     // let dataArr = [];

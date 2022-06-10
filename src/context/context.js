@@ -4,7 +4,7 @@ import SpotifyWebApi from "spotify-web-api-js";
 import reducer from "./reducer";
 import {
   SET_TOKEN,
-  SET_TOKEN_EXPIRES_IN,
+  // SET_TOKEN_EXPIRES_IN,
   SET_TOKEN_IS_SET,
   SET_PLAYLISTS,
   SET_PLAYLIST,
@@ -27,7 +27,7 @@ export const context = createContext();
 const State = (props) => {
   const initialState = {
     token: "",
-    expiresIn: 0,
+    // expiresIn: 0,
     tokenIsSet: false,
     urlIsSet: false,
     playlists: [],
@@ -50,10 +50,10 @@ const State = (props) => {
     console.log("token777", token);
     dispatch({ type: SET_TOKEN, payload: token });
   };
-  const setTokenExpiresIn = (expiresIn) => {
-    console.log("expiresIn777", typeof expiresIn);
-    dispatch({ type: SET_TOKEN_EXPIRES_IN, payload: expiresIn });
-  };
+  // const setTokenExpiresIn = (expiresIn) => {
+  //   console.log("expiresIn777", typeof expiresIn);
+  //   dispatch({ type: SET_TOKEN_EXPIRES_IN, payload: expiresIn });
+  // };
   const setTokenIsSet = (bool) =>
     dispatch({ type: SET_TOKEN_IS_SET, payload: bool });
 
@@ -308,20 +308,20 @@ const State = (props) => {
       console.log(error);
     }
   };
-  const searchAlbum = async (albumName) => {
-    console.log("albumName", albumName);
-    const types = ["album"];
-    try {
-      let data = await spotifyApi.search(albumName, types, { limit: 5 });
-      dispatch({
-        type: SET_SEARCH_RESULT,
-        payload: data,
-      });
-      // console.log("data999", state.album);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const searchAlbum = async (albumName) => {
+  //   console.log("albumName", albumName);
+  //   const types = ["album"];
+  //   try {
+  //     let data = await spotifyApi.search(albumName, types, { limit: 5 });
+  //     dispatch({
+  //       type: SET_SEARCH_RESULT,
+  //       payload: data,
+  //     });
+  //     // console.log("data999", state.album);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const clearSavedTracks = () => dispatch({ type: CLEAR_SAVED_TRACKS });
   const clearSavedAlbums = () => dispatch({ type: CLEAR_SAVED_ALBUMS });
@@ -332,6 +332,7 @@ const State = (props) => {
     <context.Provider
       value={{
         token: state.token,
+        // expiresIn: state.expiresIn,
         tokenIsSet: state.tokenIsSet,
         playlists: state.playlists,
         playlist: state.playlist,
@@ -364,8 +365,8 @@ const State = (props) => {
         clearPlaylists,
         clearPlaylistItems,
         getRecommendations,
-        searchAlbum,
-        setTokenExpiresIn
+        // searchAlbum,
+        // setTokenExpiresIn
       }}
     >
       {props.children}
