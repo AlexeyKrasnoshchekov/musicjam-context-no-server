@@ -2,12 +2,26 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../../context/context";
 import { Table, Space } from "antd";
 import { useHistory } from "react-router-dom";
+import { DeleteOutlined } from "@ant-design/icons";
 
 export default function SavedAlbums() {
-  const { mySavedTracks, removeFromMySavedTracks, getAlbum } = useContext(context);
+  const { getMySavedTracks, mySavedTracks, removeFromMySavedTracks, getAlbum } = useContext(context);
   const [data, setData] = useState([]);
   const history = useHistory();
+  const initialRender = useRef(true);
 
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    mySavedTracks.length === 0 && getMySavedTracks();
+  }, []);
+
+  useEffect(() => {
+    mySavedTracks.length !==0 && setData([]);
+    formatData();
+  }, [mySavedTracks]);
 
   console.log('mySavedTracks', mySavedTracks);
 
@@ -58,7 +72,7 @@ export default function SavedAlbums() {
     {
       title: "Del",
       key: "del",
-      render: () => <b>Del</b>,
+      render: () => <DeleteOutlined />,
       onCell: (record, rowIndex) => {
         return {
           onClick: (event) => {handleSavedTrackDelete(rowIndex)}, // click row
@@ -114,21 +128,8 @@ export default function SavedAlbums() {
   console.log("mySavedTracks", mySavedTracks);
 
   // const { playlists, getAlbum, getPlaylists, getPlaylist, search, mySavedAlbums, getMySavedAlbums, mySavedTracks, getMySavedTracks } = useContext(context);
-  const initialRender = useRef(true);
 
-  useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-      return;
-    }
-    mySavedTracks.length !==0 && setData([]);
-    formatData();
-  }, []);
-
-  useEffect(() => {
-    mySavedTracks.length !==0 && setData([]);
-    formatData();
-  }, [mySavedTracks]);
+  
 
   const handleSavedTrackDelete = async (rowIndex) => {
     await removeFromMySavedTracks(rowIndex);

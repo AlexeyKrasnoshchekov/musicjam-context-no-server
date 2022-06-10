@@ -10,6 +10,7 @@ import {
   Space,
   Table,
   Typography,
+  notification
 } from "antd";
 
 import { useContext, useEffect, useRef, useState } from "react";
@@ -179,8 +180,21 @@ export default function Album() {
     await getMySavedTracks();
   };
 
-  const handleAddToPlaylist = (playlistId, trackUri) => {
-    addToPlaylist(playlistId, trackUri);
+  const handleAddToPlaylist = async (playlistId, trackUri) => {
+
+    let status = await addToPlaylist(playlistId, trackUri);
+    console.log('status',status);
+    if (status) {
+      notification.open({
+        message: 'Track was added to playlist',
+        duration: 3 
+      });
+    } else {
+      notification.open({
+        message: 'Track is already in playlist',
+        duration: 3 
+      });
+    }
   };
 
   const checkForSavedAlbum = () => {

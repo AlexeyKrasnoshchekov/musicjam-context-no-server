@@ -18,6 +18,7 @@ export const CLEAR_SAVED_TRACKS = "CLEAR_SAVED_TRACKS";
 export const CLEAR_SAVED_ALBUMS = "CLEAR_SAVED_ALBUMS";
 export const CLEAR_PLAYLISTS = "CLEAR_PLAYLISTS";
 export const CLEAR_PLAYLIST_ITEMS = "CLEAR_PLAYLIST_ITEMS";
+export const SET_CATEGORIES = "SET_CATEGORIES";
 // export const SET_TOKEN_EXPIRES_IN = "SET_TOKEN_EXPIRES_IN";
 
 
@@ -45,6 +46,12 @@ export const CLEAR_PLAYLIST_ITEMS = "CLEAR_PLAYLIST_ITEMS";
         return {
           ...state,
           playlists: [...state.playlists, action.payload],
+          // loading: false,
+        };
+      case SET_CATEGORIES:
+        return {
+          ...state,
+          categories: [...state.categories, action.payload],
           // loading: false,
         };
       case SET_MY_ALBUMS:

@@ -11,7 +11,7 @@ export default function Playlist() {
   const [data, setData] = useState([]);
   const { Title } = Typography;
 
-  const { playlist, playlistItems, getAlbum, removeFromPlaylist,addToMySavedTracks, clearSavedTracks, getMySavedTracks } =
+  const { playlist, playlistItems, getAlbum, removeFromPlaylist,addToMySavedTracks, clearSavedTracks, getMySavedTracks, mySavedTracks } =
     useContext(context);
 
     console.log("222", playlist);
@@ -79,7 +79,10 @@ export default function Playlist() {
       title: "Add to saved tracks",
       key: "",
       align: "center",
-      render: () => <HeartOutlined />,
+      render: (text, record, rowIndex) => {
+        let elem = data.filter((item, i) => rowIndex === i)[0];
+        if (mySavedTracks.filter(item => item.track.id === elem.id).length === 0) {return <HeartOutlined />}
+      },
       onCell: (record, rowIndex) => {
         return {
           onClick: () => {

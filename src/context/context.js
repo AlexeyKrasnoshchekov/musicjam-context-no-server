@@ -20,6 +20,7 @@ import {
   CLEAR_SAVED_ALBUMS,
   CLEAR_PLAYLISTS,
   CLEAR_PLAYLIST_ITEMS,
+  SET_CATEGORIES
 } from "./reducer";
 
 export const context = createContext();
@@ -34,6 +35,7 @@ const State = (props) => {
     mySavedAlbums: [],
     mySavedTracks: [],
     playlistItems: [],
+    categories: [],
     playlist: null,
     album: null,
     albumId: "",
@@ -149,12 +151,21 @@ const State = (props) => {
  
 
   const addToPlaylist = async (playlistId, uri) => {
-    try {
-      await spotifyApi.addTracksToPlaylist(playlistId, [uri]);
-      console.log("addTracksToPlaylist", playlistId);
-    } catch (error) {
-      console.log(error);
+    let playlistTracks = await spotifyApi.getPlaylistTracks(playlistId);
+    
+    // console.log('playlistTracks1122',playlistTracks);
+
+    if (playlistTracks.items.filter(item => item.track.uri === uri).length === 0) {
+      try {
+        await spotifyApi.addTracksToPlaylist(playlistId, [uri]);
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      return false;
     }
+    
   };
   const removeFromPlaylist = async (playlistId, uri, trackId) => {
     console.log("removeTracksFromPlaylist1", playlistId);
@@ -258,11 +269,11 @@ const State = (props) => {
       console.log(error);
     }
   };
-  const getRecommendations = async () => {
-    console.log("getRecommendations");
+  const getMyTopArtists = async () => {
+    // console.log("getMyTopArtists");
     try {
-      let data = await spotifyApi.getRecommendations();
-      console.log("getRecommendations", data);
+      let data = await spotifyApi.getMyTopArtists();
+      console.log("getMyTopArtists", data);
       // if (data) {
       //   if (data.items.length !== 0) {
       //     data.items.forEach((item) => {
@@ -277,6 +288,26 @@ const State = (props) => {
       console.log(error);
     }
   };
+  const getCategories = async () => {
+    // console.log("getMyTopTracks");
+    try {
+      let data = await spotifyApi.getCategories();
+      console.log("getCategories", data);
+      if (data) {
+        if (data.categories.items.length !== 0) {
+          data.categories.items.forEach((item) => {
+            dispatch({
+              type: SET_CATEGORIES,
+              payload: item,
+            });
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const createPlaylist = async (playlistName) => {
     const data = await spotifyApi.getMe();
     console.log("data2323", data);
@@ -342,6 +373,7 @@ const State = (props) => {
         mySavedAlbums: state.mySavedAlbums,
         mySavedTracks: state.mySavedTracks,
         playlistItems: state.playlistItems,
+        categories: state.categories,
         setToken,
         auth,
         logout,
@@ -364,9 +396,9 @@ const State = (props) => {
         removeFromMySavedAlbums,
         clearPlaylists,
         clearPlaylistItems,
-        getRecommendations,
-        // searchAlbum,
-        // setTokenExpiresIn
+        getMyTopArtists,
+        getCategories,
+
       }}
     >
       {props.children}

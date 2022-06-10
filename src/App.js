@@ -26,7 +26,7 @@ export default function App() {
             <Album />
           </Container>
         </Route>
-        <Route path={"/playlist"}>
+        <Route path={"/playlist/:id"}>
           <Container>
             <Playlist />
           </Container>

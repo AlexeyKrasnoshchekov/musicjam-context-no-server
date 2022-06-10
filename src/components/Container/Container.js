@@ -1,5 +1,6 @@
 import MyHeader from "../Header/Header";
-import "./container.css";
+import './container.css';
+import { matchPath, useRouteMatch } from "react-router-dom";
 
 import {
   Layout,
@@ -36,8 +37,6 @@ const Container = (props) => {
     // search,
     mySavedAlbums,
     getMySavedAlbums,
-    mySavedTracks,
-    getMySavedTracks,
     clearPlaylists,
     clearPlaylistItems,
   } = useContext(context);
@@ -46,16 +45,15 @@ const Container = (props) => {
 
   const initialRender = useRef(true);
   const history = useHistory();
-
-  // const { playlists} = useContext(context);
-  // console.log('playlists',playlists);
-  // const items = [
-  //   // getItem('Option 1', '1', <PieChartOutlined />),
-  //   // getItem('Option 2', '2', <DesktopOutlined />),
-  //   getItem('Playlists', '1', <UnorderedListOutlined />, playlists),
-  //   // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  //   // getItem('Files', '9', <FileOutlined />),
-  // ];
+  
+  const {path} =  useRouteMatch();
+  const isHome = matchPath(path, {
+    path: "/",
+    exact: true,
+    strict: false,
+  });
+  console.log('isHome', isHome);
+  // console.log('match', match.url);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -80,7 +78,7 @@ const Container = (props) => {
     console.log("111222");
     await clearPlaylistItems();
     await getPlaylist(id);
-    history.push("/playlist");
+    history.push(`/playlist/${id}`);
   };
 
   const handleGetAlbum = async (id) => {
@@ -97,7 +95,7 @@ const Container = (props) => {
     }
     playlists.length === 0 && getPlaylists();
     mySavedAlbums.length === 0 && getMySavedAlbums();
-    mySavedTracks.length === 0 && getMySavedTracks();
+    // mySavedTracks.length === 0 && getMySavedTracks();
   }, []);
 
   return (
@@ -192,15 +190,16 @@ const Container = (props) => {
           <MyHeader />
         </Header>
         <Content
-          style={{
-            margin: "0 16px",
-          }}
+          // style={{
+          //   margin: "0 16px",
+          // }}
+          // className="home"
+          className={isHome && "home"}
         >
           <div
             className="site-layout-background"
             style={{
-              padding: 24,
-              minHeight: 360,
+              padding: 20,
             }}
           >
             {props.children}

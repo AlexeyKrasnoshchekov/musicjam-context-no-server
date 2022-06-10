@@ -4,7 +4,7 @@ import { context } from "../../context/context";
 import Item from "../Item/Item";
 import Track from "../Track/Track";
 import "./SearchResults.css";
-import { Button, Card, Dropdown, Menu, Space, Table, Typography } from "antd";
+import { Button, Card, Dropdown, Menu, Space, Table, Typography, notification } from "antd";
 import { HeartOutlined, PlusSquareOutlined } from "@ant-design/icons";
 
 export default function SearchResults() {
@@ -18,6 +18,7 @@ export default function SearchResults() {
     getMySavedAlbums,
     playlists,
     mySavedAlbums,
+    mySavedTracks,
     clearSavedTracks,
     getMySavedTracks,
     addToPlaylist,
@@ -97,7 +98,10 @@ export default function SearchResults() {
       title: "Add to saved tracks",
       key: "",
       align: "center",
-      render: () => <HeartOutlined />,
+      render: (text, record, rowIndex) => {
+        let elem = data.filter((item, i) => rowIndex === i)[0];
+        if (mySavedTracks.filter(item => item.track.id === elem.id).length === 0) {return <HeartOutlined />}
+      },
       onCell: (record, rowIndex) => {
         return {
           onClick: () => {
@@ -197,8 +201,21 @@ export default function SearchResults() {
     await getMySavedTracks();
   };
 
-  const handleAddToPlaylist = (playlistId, trackUri) => {
-    addToPlaylist(playlistId, trackUri);
+  const handleAddToPlaylist = async (playlistId, trackUri) => {
+
+    let status = await addToPlaylist(playlistId, trackUri);
+    console.log('status',status);
+    if (status) {
+      notification.open({
+        message: 'Track was added to playlist',
+        duration: 3 
+      });
+    } else {
+      notification.open({
+        message: 'Track is already in playlist',
+        duration: 3 
+      });
+    }
   };
 
   return (
@@ -214,6 +231,7 @@ export default function SearchResults() {
                   searchResult.albums.items.map((album, index) => {
                     return (
                       <Card
+                      hoverable
                         title={album.name}
                         extra={<a href="#" onClick={() => {handleGetAlbum(album.id)}}>More</a>}
                         style={{
@@ -237,17 +255,6 @@ export default function SearchResults() {
                         <p>{`Total tracks: ${album.total_tracks}`}</p>
                         {mySavedAlbums.filter(savedAlbum => savedAlbum.album.id === album.id).length === 0 && <Button onClick={()=> {handleAddToMyAlbums(album.id)}}>Save</Button>}
                       </Card>
-                      // <Item
-                      //   key={index}
-                      //   albumId={album.id}
-                      //   getAlbum={handleGetAlbum}
-                      //   addAlbum={handleAddToMyAlbums}
-                      //   name={album.name}
-                      //   releaseDate={album.release_date}
-                      //   tracksTotal={album.total_tracks}
-                      //   artist={album.artists[0].name}
-                      //   images={album.images}
-                      // />
                     );
                   })}
               </div>
@@ -262,6 +269,7 @@ export default function SearchResults() {
                     // console.log('artist.images[1]', artist.images[1].url)
                     return (
                       <Card
+                      hoverable
                         title={artist.name}
                         extra={<a href="#">More</a>}
                         style={{
