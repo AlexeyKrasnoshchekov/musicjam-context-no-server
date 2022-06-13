@@ -1,8 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { context } from "../../context/context";
-import Track from "../Track/Track";
-import "./Playlist.css";
 import { Col, Image, Row, Table, Typography } from "antd";
 import { DeleteOutlined, HeartOutlined } from "@ant-design/icons";
 
@@ -10,15 +8,11 @@ export default function Playlist() {
   const [imageIndex, setImageIndex] = useState(0);
   const [data, setData] = useState([]);
   const { Title } = Typography;
+  const {id} = useParams();
 
-  const { playlist, playlistItems, getAlbum, removeFromPlaylist,addToMySavedTracks, clearSavedTracks, getMySavedTracks, mySavedTracks } =
+  const { token,
+    refreshPage, playlist, playlistItems, clearPlaylistItems, getPlaylist, removeFromPlaylist,addToMySavedTracks, clearSavedTracks, getMySavedTracks, mySavedTracks } =
     useContext(context);
-
-    console.log("222", playlist);
-  console.log("333", playlistItems);
-
-
-  const history = useHistory();
   const initialRender = useRef(true);
 
   useEffect(() => {
@@ -26,14 +20,29 @@ export default function Playlist() {
       initialRender.current = false;
       return;
     }
-    playlistItems.length !==0 && setData([]);
-    formatData();
-  }, []);
+    handleGetPlaylist(id);
+  }, [id]);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    token === "" && refreshPage();
+    
+  }, [token]);
 
   useEffect(() => {
     playlistItems.length !==0 && setData([]);
     formatData();
   }, [playlistItems]);
+
+  const handleGetPlaylist = async (id) => {
+    console.log('id11122', id);
+    await clearPlaylistItems();
+    await getPlaylist(id);
+    
+  };
 
   const columns = [
     {
@@ -45,7 +54,10 @@ export default function Playlist() {
       title: "Artist",
       key: "artist",
       dataIndex: "artist",
-      // render: (text) => <a href="#" onClick={() => {handleArtistSearch(text)}}>{text}</a>,
+      render: (text, record, rowIndex) => {
+        let elem = data.filter((item, i) => rowIndex === i)[0];
+        return <Link to={`/artist/${elem.artistId}`}>{elem.artist}</Link>
+      },
     },
     {
       title: "Added",
@@ -57,13 +69,10 @@ export default function Playlist() {
       title: "Album",
       dataIndex: "album",
       key: "album",
-      render: (text) => <a>{text}</a>,
-      onCell: (record, rowIndex) => {
-        return {
-          onClick: (event) => {handleGetAlbum(record)}, // click row
-
-        };
-      }
+      render: (text, record, rowIndex) => {
+        let elem = data.filter((item, i) => rowIndex === i)[0];
+        return <Link to={`/album/${elem.albumId}`}>{elem.album}</Link>
+      },
     },
     {
       title: "Released",
@@ -87,9 +96,6 @@ export default function Playlist() {
         return {
           onClick: () => {
             let elem = data.filter((item, i) => rowIndex === i)[0];
-            // console.log("elem", elem);
-            // let trackId = elem.id;
-            // console.log("trackId", trackId);
             handleAddTrack(elem.id);
           },
         };
@@ -123,8 +129,6 @@ export default function Playlist() {
     playlistItems &&
     playlistItems.forEach((item) => {
         console.log('item', item);
-        // setTrackUri(item.uri);
-        // setTrackId(item.id)
 
         setData1(
           item.track.name,
@@ -135,11 +139,13 @@ export default function Playlist() {
           item.track.duration_ms / 1000,
           item.track.id,
           item.track.uri,
+          item.track.artists[0].id,
+          item.track.album.id,
         );
       });
   };
 
-  const setData1 = (name, artist, added, released, album, duration, id, uri) => {
+  const setData1 = (name, artist, added, released, album, duration, id, uri, artistId, albumId) => {
     let obj = {
       name: "",
       artist: "",
@@ -149,6 +155,8 @@ export default function Playlist() {
       duration: "",
       uri: "",
       id: "",
+      artistId: "",
+      albumId: ""
     };
 
     let duration_min = Math.floor(duration / 60);
@@ -162,25 +170,21 @@ export default function Playlist() {
     obj.duration = `${duration_min}:${duration_sec}`;
     obj.id = id;
     obj.uri = uri;
-    // setData([]);
+    obj.artistId = artistId;
+    obj.albumId = albumId;
     setData((data) => [...data, obj]);
-  };
-
-  const handleGetAlbum = async (id) => {
-    await getAlbum(id);
-    history.push(`/album/${id}`);
   };
   
   return (
     <>
-      <Row>
+      {playlist && <Row>
         <Col span={8}>
           <Image width={200} src={playlist.images[imageIndex].url} />
         </Col>
         <Col span={16}>
           <Title level={2}>{playlist.name}</Title>
         </Col>
-      </Row>
+      </Row>}
 
       <Row>
         <Col span={24}>
@@ -190,68 +194,5 @@ export default function Playlist() {
         </Col>
       </Row>
     </>
-    // <div>
-    //   {playlist.images && (
-    //     <div
-    //       className="playlist-inner-container"
-    //       style={{ outline: "2px solid red" }}
-    //     >
-    //       {playlist.images.length !== 0 && (
-    //         <div
-    //           style={{
-    //             backgroundImage: `url(${playlist.images[imageIndex].url})`,
-    //           }}
-    //           className="playlist-image"
-    //           alt="playlist picture"
-    //         >
-    //           {playlist.images.length > 1 && (
-    //             <div
-    //               style={{ fontSize: "18px", outline: "2px solid red" }}
-    //               onClick={handlePrevButton}
-    //             >
-    //               {"<"}
-    //             </div>
-    //           )}
-
-    //           {playlist.images.length > 1 && (
-    //             <div
-    //               style={{ fontSize: "18px", outline: "2px solid red" }}
-    //               onClick={handleNextButton}
-    //             >
-    //               {">"}
-    //             </div>
-    //           )}
-    //         </div>
-    //       )}
-
-    //       <div className="playlist-tracks-container">
-    //         <h3>tracks</h3>
-    //         {playlistItems.length !== 0 && (
-    //           <div className="playlist-tracks">
-    //             {playlistItems.map((item, index) => {
-    //               return (
-    //                 <div key={index}>
-    //                   <Track
-
-    //                   date={item.added_at}
-    //                   albumId={item.track.album.id}
-    //                   getAlbum={handleGetAlbum}
-    //                   artist={item.track.artists[0].name}
-    //                   track={item.track.name}
-    //                   trackId={item.track.id}
-    //                   album={item.track.album.name}
-    //                   releaseDate={item.track.album.release_date}
-    //                 />
-    //                 <div onClick={() => {removeFromPlaylist(playlist.id, item.track.uri, item.track.id)}}>DEL</div>
-    //                 </div>
-    //               );
-    //             })}
-    //           </div>
-    //         )}
-    //       </div>
-    //     </div>
-    //   )}
-    //   {/* <AudioPlayer /> */}
-    // </div>
   );
 }

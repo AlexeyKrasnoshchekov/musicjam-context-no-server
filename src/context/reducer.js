@@ -19,6 +19,9 @@ export const CLEAR_SAVED_ALBUMS = "CLEAR_SAVED_ALBUMS";
 export const CLEAR_PLAYLISTS = "CLEAR_PLAYLISTS";
 export const CLEAR_PLAYLIST_ITEMS = "CLEAR_PLAYLIST_ITEMS";
 export const SET_CATEGORIES = "SET_CATEGORIES";
+export const SET_ARTIST = "SET_ARTIST";
+export const SET_ARTIST_ALBUMS = "SET_ARTIST_ALBUMS";
+export const SET_RELATED_ARTISTS = "SET_RELATED_ARTISTS";
 // export const SET_TOKEN_EXPIRES_IN = "SET_TOKEN_EXPIRES_IN";
 
 
@@ -48,6 +51,18 @@ export const SET_CATEGORIES = "SET_CATEGORIES";
           playlists: [...state.playlists, action.payload],
           // loading: false,
         };
+        case SET_ARTIST_ALBUMS:
+          return {
+            ...state,
+            artistAlbums: [...state.artistAlbums, action.payload],
+            // loading: false,
+          };
+          case SET_RELATED_ARTISTS:
+          return {
+            ...state,
+            relatedArtists: [...state.relatedArtists, action.payload],
+            // loading: false,
+          };
       case SET_CATEGORIES:
         return {
           ...state,
@@ -84,8 +99,14 @@ export const SET_CATEGORIES = "SET_CATEGORIES";
           ...state,
           playlist: action.payload,
         };
+        case SET_ARTIST:
+          console.log('action.payload222', action.payload);
+        return {
+          ...state,
+          artist: action.payload,
+        };
       case SET_ALBUM:
-        console.log('action.payload222', action.payload);
+        
         return {
           ...state,
           album: action.payload,

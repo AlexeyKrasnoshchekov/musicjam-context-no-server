@@ -11,8 +11,6 @@ export default function Login() {
   const initialRender = useRef(true);
   const location = useLocation();
 
-  // console.log('expiresIn', expiresIn);
-
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
@@ -22,8 +20,8 @@ export default function Login() {
     if (location.hash) {
       const tokenLocal = getAccessToken();
       console.log('tokenLocal',tokenLocal);
-      // setTokenExpiresIn(tokenLocal.expiresIn);
       setToken(tokenLocal);
+      localStorage.setItem('token', tokenLocal);
       setTokenIsSet(true);
     }
   }, [authUrlIsSet]);
@@ -37,42 +35,22 @@ export default function Login() {
     }
   };
 
-  // const openNotification = () => {
-  //   notification.open({
-  //     message: 'Spotify token',
-  //     description:
-  //       'Token successfully refreshed, you can continue',
-  //     // onClick: () => {
-  //     //   console.log('Notification Clicked!');
-  //     // },
-  //   });
-  // };
-
   setInterval(() => {
     setUrl();
 
     if (location.hash) {
       const tokenLocal = getAccessToken();
       console.log('tokenLocal',tokenLocal);
+      localStorage.setItem('token', tokenLocal);
       // setTokenExpiresIn(tokenLocal.expiresIn);
       setToken(tokenLocal);
       setTokenIsSet(true);
     }
 
-    
-
-    // const data = await spotifyApi.refreshAccessToken();
-    // const access_token = data.body['access_token'];
-
-    // console.log('The access token has been refreshed!');
-    // console.log('access_token:', access_token);
-    // spotifyApi.setAccessToken(access_token);
   }, 3600 * 1000); //one hour
-  // }, 20000);
 
   return (
     <>
-    {/* <Space size="middle"></Space> */}
       <Row>
         <Col span={2}></Col>
         <Col span={20}>

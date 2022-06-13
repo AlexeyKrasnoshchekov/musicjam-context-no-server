@@ -1,28 +1,25 @@
+import { useContext, useEffect, useRef, useState } from "react";
 import MyHeader from "../Header/Header";
-import './container.css';
-import { matchPath, useRouteMatch } from "react-router-dom";
+import { Link, matchPath, useRouteMatch } from "react-router-dom";
 
 import {
   Layout,
   Menu,
-  icons,
   Modal,
   Input,
   Button,
-  Divider,
-  Space,
 } from "antd";
+
 import {
   UnorderedListOutlined,
   PlaySquareOutlined,
   HeartOutlined,
 } from "@ant-design/icons";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import Playlists from "../Playlists/Playlists";
+
 import { context } from "../../context/context";
 import { useHistory } from "react-router-dom";
 import SubMenu from "antd/lib/menu/SubMenu";
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 const Container = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -31,14 +28,10 @@ const Container = (props) => {
   const {
     playlists,
     createPlaylist,
-    getAlbum,
     getPlaylists,
-    getPlaylist,
-    // search,
     mySavedAlbums,
     getMySavedAlbums,
     clearPlaylists,
-    clearPlaylistItems,
   } = useContext(context);
 
   const [playlistName, setPlaylistName] = useState("");
@@ -70,24 +63,6 @@ const Container = (props) => {
     setIsModalVisible(false);
   };
 
-  // const onChange = (data) => {
-  //   setValue(data);
-  // };
-
-  const handlePlaylistClick = async (id: string) => {
-    console.log("111222");
-    await clearPlaylistItems();
-    await getPlaylist(id);
-    history.push(`/playlist/${id}`);
-  };
-
-  const handleGetAlbum = async (id) => {
-    await getAlbum(id);
-    history.push(`/album/${id}`);
-  };
-
-  console.log("mySavedAlbums", mySavedAlbums);
-
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
@@ -95,7 +70,6 @@ const Container = (props) => {
     }
     playlists.length === 0 && getPlaylists();
     mySavedAlbums.length === 0 && getMySavedAlbums();
-    // mySavedTracks.length === 0 && getMySavedTracks();
   }, []);
 
   return (
@@ -112,12 +86,10 @@ const Container = (props) => {
         <Menu
           mode="inline"
           defaultSelectedKeys={["sub1"]}
-          // defaultOpenKeys={["sub1"]}
           style={{
             height: "100%",
           }}
         >
-          {/* <Divider plain={true} /> */}
           <SubMenu
             key="sub1"
             title="Playlists"
@@ -146,11 +118,8 @@ const Container = (props) => {
                 return (
                   <Menu.Item
                     key={subKey}
-                    onClick={() => {
-                      handlePlaylistClick(playlist.id);
-                    }}
                   >
-                    {playlist.name}
+                    <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
                   </Menu.Item>
                 );
               })}
@@ -166,10 +135,11 @@ const Container = (props) => {
               return (
                 <Menu.Item
                   key={subKey}
-                  onClick={() => {
-                    handleGetAlbum(item.album.id);
-                  }}
-                >{`${item.album.name} (${item.album.artists[0].name})`}</Menu.Item>
+                ><Link to={`/album/${item.album.id}`}> 
+                {`${item.album.name} (${item.album.artists[0].name})`}
+                </Link>
+                  
+                  </Menu.Item>
               );
             })}
           </SubMenu>
@@ -190,10 +160,6 @@ const Container = (props) => {
           <MyHeader />
         </Header>
         <Content
-          // style={{
-          //   margin: "0 16px",
-          // }}
-          // className="home"
           className={isHome && "home"}
         >
           <div
@@ -205,13 +171,7 @@ const Container = (props) => {
             {props.children}
           </div>
         </Content>
-        {/* <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          Ant Design ©2018 Created by Ant UED
-        </Footer> */}
+
       </Layout>
     </Layout>
   );
@@ -219,17 +179,4 @@ const Container = (props) => {
 
 export default Container;
 
-// export default function Container(props) {
 
-//   return (
-//     <div className="home">
-//       <Header />
-//       <div style={{ display: "flex", minHeight: '94%', color: 'lightcyan' }}>
-//         <div className="sidebar">
-//           <Playlists />
-//         </div>
-//         <main id="main" style={{width: '100%', paddingTop: '2rem', paddingBottom: '2rem', paddingLeft: '2rem'}}>{props.children}</main>
-//       </div>
-//     </div>
-//   );
-// }

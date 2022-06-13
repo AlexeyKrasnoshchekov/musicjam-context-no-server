@@ -48,12 +48,3 @@ h2 {
     flex-direction: column;
   }
 }
-
-.playlistImage {
-  position: relative;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 640px;
-  width: 640px;
-}

@@ -1,8 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { context } from "../../context/context";
-import Item from "../Item/Item";
-import Track from "../Track/Track";
 import "./SearchResults.css";
 import { Button, Card, Dropdown, Menu, Space, Table, Typography, notification } from "antd";
 import { HeartOutlined, PlusSquareOutlined } from "@ant-design/icons";
@@ -28,13 +26,9 @@ export default function SearchResults() {
 
   const history = useHistory();
 
-  // const [albumIsSaved, setAlbumIsSaved] = useState(false);
   const [data, setData] = useState([]);
 
-  // const initialRender = useRef(true);
-
   useEffect(() => {
-    // checkForSavedAlbum();
     searchResult && searchResult.tracks && searchResult.tracks.items.length !== 0 && setData([]);
     searchResult && searchResult.tracks && searchResult.tracks.items.length !== 0 && formatData();
   }, [searchResult]);
@@ -62,7 +56,6 @@ export default function SearchResults() {
       title: "Artist",
       key: "artist",
       dataIndex: "artist",
-      // render: (text) => <a href="#" onClick={() => {handleArtistSearch(text)}}>{text}</a>,
     },
     {
       title: "Album",
@@ -106,9 +99,6 @@ export default function SearchResults() {
         return {
           onClick: () => {
             let elem = data.filter((item, i) => rowIndex === i)[0];
-            // console.log("elem", elem);
-            // let trackId = elem.id;
-            // console.log("trackId", trackId);
             handleAddTrack(elem.id);
           },
         };
@@ -190,7 +180,6 @@ export default function SearchResults() {
     obj.duration = `${duration_min}:${duration_sec}`;
     obj.uri = uri;
     obj.id = id;
-    // setData([]);
     setData((data) => [...data, obj]);
   };
 
@@ -224,7 +213,6 @@ export default function SearchResults() {
         <div>
           {searchResult.albums && (
             <div>
-              {/* <div>albums</div> */}
               <Title level={4}>Albums</Title>
               <div className="albums-grid">
                 {searchResult.albums.items.length !== 0 &&
@@ -233,7 +221,7 @@ export default function SearchResults() {
                       <Card
                       hoverable
                         title={album.name}
-                        extra={<a href="#" onClick={() => {handleGetAlbum(album.id)}}>More</a>}
+                        extra={<Link to={`/album/${album.id}`}>More</Link>}
                         style={{
                           width: 300,
                           height: 300,
@@ -271,7 +259,7 @@ export default function SearchResults() {
                       <Card
                       hoverable
                         title={artist.name}
-                        extra={<a href="#">More</a>}
+                        extra={<Link to={`/artist/${artist.id}`}>More</Link>}
                         style={{
                           
                           width: 300,
@@ -294,20 +282,11 @@ export default function SearchResults() {
                         <p>{`Genres: ${artist.genres.join('; ')}`}</p>
                         <p>{`Popularity: ${artist.popularity}`}</p>
                       </Card>
-                      // <Item
-                      //   key={index}
-                      //   // date={item.added_at}
-                      //   name={artist.name}
-                      //   popularity={artist.popularity}
-                      //   genre={artist.genres[0]}
-                      //   images={artist.images}
-                      // />
                     );
                   })}
               </div>
             </div>
           )}
-          {/* {searchResult.tracks.items.length !== 0 && ( */}
             <div>
             <Title level={4}>Tracks</Title>
               <div>
@@ -318,22 +297,8 @@ export default function SearchResults() {
                     dataSource={data}
                   />
                 )}
-                {/* {searchResult.tracks.items.map((item, index) => {
-                  return (
-                    <Track
-                      key={index}
-                      // date={item.added_at}
-                      artist={item.artists[0].name}
-                      name={item.name}
-                      album={item.album.name}
-                      releaseDate={item.album.release_date}
-                      uri={item.uri}
-                    />
-                  );
-                })} */}
               </div>
             </div>
-          {/* )} */}
         </div>
       )}
     </div>

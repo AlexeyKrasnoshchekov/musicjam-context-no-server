@@ -2,7 +2,6 @@ import { HeartOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
-  Divider,
   Dropdown,
   Image,
   Menu,
@@ -14,8 +13,8 @@ import {
 } from "antd";
 
 import { useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { context } from "../../context/context";
-import Track from "../Track/Track";
 import "./album.css";
 
 export default function Album() {
@@ -28,7 +27,10 @@ export default function Album() {
   const { Title } = Typography;
 
   const {
+    token,
+    refreshPage,
     album,
+    getAlbum,
     addToMySavedAlbums,
     clearSavedAlbums,
     getMySavedAlbums,
@@ -42,21 +44,44 @@ export default function Album() {
   } = useContext(context);
 
   const initialRender = useRef(true);
+  const {id} = useParams();
+
+  const handleGetAlbum = async (id) => {
+    console.log('id11122', id);
+    await getAlbum(id);
+    
+  };
 
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
       return;
     }
-    checkForSavedAlbum();
-    album.tracks.items.length !== 0 && setData([]);
-    formatData();
-  }, []);
+    token === "" && refreshPage();
+    
+  }, [token]);
 
   useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    handleGetAlbum(id);
+    
+  }, [id]);
+
+ 
+
+  useEffect(() => {
+    if (album) {
+      console.log('444', album);
+    checkForSavedAlbum(album.id);
     album.tracks.items.length !== 0 && setData([]);
     formatData();
+    }
   }, [album]);
+
+  
 
 
   const columns = [
@@ -197,12 +222,12 @@ export default function Album() {
     }
   };
 
-  const checkForSavedAlbum = () => {
+  const checkForSavedAlbum = (albumId) => {
     console.log('mySavedAlbums', mySavedAlbums);
     mySavedAlbums.length !==0 && mySavedAlbums.forEach(savedAlbum => {
       console.log('savedAlbum.id', savedAlbum.album.id);
-      console.log('album.id', album.id);
-      if (savedAlbum.album.id === album.id) {
+      console.log('album.id', albumId);
+      if (savedAlbum.album.id === albumId) {
         console.log('папапа');
         setAlbumIsSaved(true);
       }
@@ -212,7 +237,7 @@ export default function Album() {
 
   return (
     <>
-      <Row>
+      {album && <Row>
         <Col span={8}>
           <Image width={300} src={album.images.length !== 0 && album.images[imageIndex].url} />
         </Col>
@@ -225,7 +250,7 @@ export default function Album() {
           <Title level={4}>{`Total tracks: ${album.total_tracks}`}</Title>
           {albumIsSaved ? <Button onClick={() => handleDeleteFromMyAlbums()}>Unsave</Button> : <Button onClick={() => handleAddToMyAlbums()}>Save</Button>}
         </Col>
-      </Row>
+      </Row>}
 
       <Row>
         <Col span={24}>

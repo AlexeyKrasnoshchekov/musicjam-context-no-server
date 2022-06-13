@@ -1,8 +1,9 @@
 import { useContext } from "react";
-import "./App.css";
+// import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Playlist from "./components/Playlist/Playlist";
+import ArtistPage from './components/ArtistPage//ArtistPage';
 import SavedTracks from './components/SavedTracks/savedTracks';
 
 import Login from "./pages/Login";
@@ -24,6 +25,11 @@ export default function App() {
         <Route path={"/album/:id"}>
           <Container>
             <Album />
+          </Container>
+        </Route>
+        <Route path={"/artist/:id"}>
+          <Container>
+            <ArtistPage />
           </Container>
         </Route>
         <Route path={"/playlist/:id"}>

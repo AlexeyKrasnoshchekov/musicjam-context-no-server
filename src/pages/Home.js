@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Container from "../components/Container/Container";
 import { context } from "../context/context";
 import { notification } from "antd";
-import '../components/Container/container.css';
 
 export default function Home() {
   const [isAuth, setIsAuth] = useState(false);
@@ -30,7 +29,6 @@ export default function Home() {
     <div style={{ height: "100%" }}>
       {isAuth && (
         <Container>
-          {/* <div className="home">111111</div> */}
         </Container>
       )}
     </div>

@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../../context/context";
-import { Table, Space } from "antd";
-import { useHistory } from "react-router-dom";
+import { Table } from "antd";
+import { Link } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 
 export default function SavedAlbums() {
-  const { getMySavedTracks, mySavedTracks, removeFromMySavedTracks, getAlbum } = useContext(context);
+  const { getMySavedTracks, mySavedTracks, removeFromMySavedTracks, token, refreshPage } = useContext(context);
   const [data, setData] = useState([]);
-  const history = useHistory();
   const initialRender = useRef(true);
 
   useEffect(() => {
@@ -19,11 +18,19 @@ export default function SavedAlbums() {
   }, []);
 
   useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    token === "" && refreshPage();
+    
+  }, [token]);
+
+  useEffect(() => {
     mySavedTracks.length !==0 && setData([]);
     formatData();
   }, [mySavedTracks]);
 
-  console.log('mySavedTracks', mySavedTracks);
 
   const columns = [
     {
@@ -35,7 +42,10 @@ export default function SavedAlbums() {
       title: "Artist",
       key: "artist",
       dataIndex: "artist",
-      // render: (text) => <a href="#" onClick={() => {handleArtistSearch(text)}}>{text}</a>,
+      render: (text, record, rowIndex) => {
+        let elem = mySavedTracks.filter((item, i) => rowIndex === i)[0];
+        return <Link to={`/artist/${elem.track.artists[0].id}`}>{elem.track.artists[0].name}</Link>
+      },
     },
     {
       title: "Added",
@@ -46,17 +56,10 @@ export default function SavedAlbums() {
       title: "Album",
       dataIndex: "album",
       key: "album",
-      render: (text) => <a>{text}</a>,
-      onCell: (record, rowIndex) => {
-        return {
-          
-          onClick: (event) => {
-            let elem = mySavedTracks.filter((item, i) => rowIndex === i)[0];
-            handleGetAlbum(elem.track.album.id);
-          }, // click row
-
-        };
-      }
+      render: (text, record, rowIndex) => {
+        let elem = mySavedTracks.filter((item, i) => rowIndex === i)[0];
+        return <Link to={`/album/${elem.track.album.id}`}>{elem.track.album.name}</Link>
+      },
     },
     {
       title: "Released",
@@ -82,13 +85,7 @@ export default function SavedAlbums() {
     },
   ];
 
-  const handleGetAlbum = async (id) => {
-    await getAlbum(id);
-    history.push(`/album/${id}`);
-  };
-
   const formatData = () => {
-    // let dataArr = [];
     mySavedTracks.length !== 0 &&
       mySavedTracks.forEach((item) => {
         setData1(
@@ -121,15 +118,8 @@ export default function SavedAlbums() {
     obj.album = album;
     obj.released = released;
     obj.duration = `${duration_min}:${duration_sec}`;
-    // setData([]);
     setData((data) => [...data, obj]);
   };
-
-  console.log("mySavedTracks", mySavedTracks);
-
-  // const { playlists, getAlbum, getPlaylists, getPlaylist, search, mySavedAlbums, getMySavedAlbums, mySavedTracks, getMySavedTracks } = useContext(context);
-
-  
 
   const handleSavedTrackDelete = async (rowIndex) => {
     await removeFromMySavedTracks(rowIndex);
@@ -143,7 +133,6 @@ export default function SavedAlbums() {
         <Table
           columns={columns}
           dataSource={data}
-          
         />
       )}
     </>

@@ -7,6 +7,8 @@ import {
   // SET_TOKEN_EXPIRES_IN,
   SET_TOKEN_IS_SET,
   SET_PLAYLISTS,
+  SET_ARTIST_ALBUMS,
+  SET_RELATED_ARTISTS,
   SET_PLAYLIST,
   SET_ALBUM,
   SET_MY_ALBUMS,
@@ -20,7 +22,8 @@ import {
   CLEAR_SAVED_ALBUMS,
   CLEAR_PLAYLISTS,
   CLEAR_PLAYLIST_ITEMS,
-  SET_CATEGORIES
+  // SET_CATEGORIES,
+  SET_ARTIST
 } from "./reducer";
 
 export const context = createContext();
@@ -35,9 +38,11 @@ const State = (props) => {
     mySavedAlbums: [],
     mySavedTracks: [],
     playlistItems: [],
-    categories: [],
+    artistAlbums: [],
+    relatedArtists: [],
     playlist: null,
     album: null,
+    artist: null,
     albumId: "",
     searchResult: null,
     user: "",
@@ -70,6 +75,11 @@ const State = (props) => {
   const auth = () => {
     console.log("auth", state.token);
     spotifyApi.setAccessToken(state.token);
+  };
+
+  const refreshPage = () => {
+    let tokenFromLS = localStorage.getItem('token');
+    tokenFromLS !=="" && spotifyApi.setAccessToken(tokenFromLS);
   };
 
   const logout = () => {
@@ -135,15 +145,69 @@ const State = (props) => {
     }
   };
   const getAlbum = async (albumId) => {
-    console.log("first");
+    console.log("albumId", albumId);
     try {
       let data = await spotifyApi.getAlbum(albumId);
       console.log("data888", data);
-      await dispatch({
+      dispatch({
         type: SET_ALBUM,
         payload: data,
       });
-      console.log("data999", state.album);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getArtist = async (artistId) => {
+    console.log("artistId", artistId);
+    try {
+      let data = await spotifyApi.getArtist(artistId);
+      console.log("data888", data);
+      await dispatch({
+        type: SET_ARTIST,
+        payload: data,
+      });
+      console.log("data999", state.artist);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getArtistAlbums = async (artistId) => {
+    console.log("artistId", artistId);
+    try {
+      let data = await spotifyApi.getArtistAlbums(artistId, {limit: 10});
+      console.log("getArtistAlbums", data);
+
+      if (data.items.length !== 0) {
+        data.items.forEach((item) => {
+          dispatch({
+            type: SET_ARTIST_ALBUMS,
+            payload: item,
+          });
+        });
+      }
+
+      // console.log("data999", state.artist);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getArtistRelatedArtists = async (artistId) => {
+    console.log("artistId", artistId);
+    try {
+      let data = await spotifyApi.getArtistRelatedArtists(artistId);
+      console.log("getArtistRelatedArtists", data);
+
+      if (data.artists.length !== 0) {
+        data.artists.forEach((item) => {
+          dispatch({
+            type: SET_RELATED_ARTISTS,
+            payload: item,
+          });
+        });
+      }
+      // console.log("data999", state.artist);
     } catch (error) {
       console.log(error);
     }
@@ -269,44 +333,26 @@ const State = (props) => {
       console.log(error);
     }
   };
-  const getMyTopArtists = async () => {
-    // console.log("getMyTopArtists");
-    try {
-      let data = await spotifyApi.getMyTopArtists();
-      console.log("getMyTopArtists", data);
-      // if (data) {
-      //   if (data.items.length !== 0) {
-      //     data.items.forEach((item) => {
-      //       dispatch({
-      //         type: SET_MY_TRACKS,
-      //         payload: item,
-      //       });
-      //     });
-      //   }
-      // }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getCategories = async () => {
-    // console.log("getMyTopTracks");
-    try {
-      let data = await spotifyApi.getCategories();
-      console.log("getCategories", data);
-      if (data) {
-        if (data.categories.items.length !== 0) {
-          data.categories.items.forEach((item) => {
-            dispatch({
-              type: SET_CATEGORIES,
-              payload: item,
-            });
-          });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
+  // const getCategories = async () => {
+  //   // console.log("getMyTopTracks");
+  //   try {
+  //     let data = await spotifyApi.getCategories();
+  //     console.log("getCategories", data);
+  //     if (data) {
+  //       if (data.categories.items.length !== 0) {
+  //         data.categories.items.forEach((item) => {
+  //           dispatch({
+  //             type: SET_CATEGORIES,
+  //             payload: item,
+  //           });
+  //         });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const createPlaylist = async (playlistName) => {
     const data = await spotifyApi.getMe();
@@ -368,12 +414,15 @@ const State = (props) => {
         playlists: state.playlists,
         playlist: state.playlist,
         album: state.album,
+        artist: state.artist,
         user: state.user,
         searchResult: state.searchResult,
         mySavedAlbums: state.mySavedAlbums,
         mySavedTracks: state.mySavedTracks,
         playlistItems: state.playlistItems,
-        categories: state.categories,
+        artistAlbums: state.artistAlbums,
+        relatedArtists: state.relatedArtists,
+        // categories: state.categories,
         setToken,
         auth,
         logout,
@@ -396,8 +445,12 @@ const State = (props) => {
         removeFromMySavedAlbums,
         clearPlaylists,
         clearPlaylistItems,
-        getMyTopArtists,
-        getCategories,
+        // getMyTopArtists,
+        // getCategories,
+        getArtist,
+        getArtistAlbums,
+        getArtistRelatedArtists,
+        refreshPage
 
       }}
     >
