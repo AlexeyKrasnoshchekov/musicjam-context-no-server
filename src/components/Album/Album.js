@@ -9,7 +9,7 @@ import {
   Space,
   Table,
   Typography,
-  notification
+  notification,
 } from "antd";
 
 import { useContext, useEffect, useRef, useState } from "react";
@@ -20,8 +20,6 @@ import "./album.css";
 export default function Album() {
   const [imageIndex, setImageIndex] = useState(0);
   const [albumIsSaved, setAlbumIsSaved] = useState(false);
-  // const [trackUri, setTrackUri] = useState("");
-  // const [trackId, setTrackId] = useState("");
 
   const [data, setData] = useState([]);
   const { Title } = Typography;
@@ -40,16 +38,14 @@ export default function Album() {
     addToMySavedTracks,
     clearSavedTracks,
     getMySavedTracks,
-    mySavedAlbums
+    mySavedAlbums,
   } = useContext(context);
 
   const initialRender = useRef(true);
-  const {id} = useParams();
+  const { id } = useParams();
 
   const handleGetAlbum = async (id) => {
-    console.log('id11122', id);
     await getAlbum(id);
-    
   };
 
   useEffect(() => {
@@ -58,7 +54,6 @@ export default function Album() {
       return;
     }
     token === "" && refreshPage();
-    
   }, [token]);
 
   useEffect(() => {
@@ -67,22 +62,15 @@ export default function Album() {
       return;
     }
     handleGetAlbum(id);
-    
   }, [id]);
-
- 
 
   useEffect(() => {
     if (album) {
-      console.log('444', album);
-    checkForSavedAlbum(album.id);
-    album.tracks.items.length !== 0 && setData([]);
-    formatData();
+      checkForSavedAlbum(album.id);
+      album.tracks.items.length !== 0 && setData([]);
+      formatData();
     }
   }, [album]);
-
-  
-
 
   const columns = [
     {
@@ -138,9 +126,7 @@ export default function Album() {
         return {
           onClick: () => {
             let elem = data.filter((item, i) => rowIndex === i)[0];
-            console.log("elem", elem);
             let trackId = elem.id;
-            console.log("trackId", trackId);
             handleAddTrack(trackId);
           },
         };
@@ -151,11 +137,7 @@ export default function Album() {
   const formatData = () => {
     album.tracks &&
       album.tracks.items.forEach((item) => {
-        // console.log('item', item);
-        // setTrackUri(item.uri);
-        // setTrackId(item.id)
-
-        setData1(
+        createDataObj(
           item.name,
           item.track_number,
           item.duration_ms / 1000,
@@ -165,7 +147,7 @@ export default function Album() {
       });
   };
 
-  const setData1 = (name, trackNumber, duration, uri, id) => {
+  const createDataObj = (name, trackNumber, duration, uri, id) => {
     let obj = {
       name: "",
       number: "",
@@ -190,67 +172,71 @@ export default function Album() {
     await addToMySavedAlbums(album.id);
     await clearSavedAlbums();
     await getMySavedAlbums();
-    setAlbumIsSaved(state => !state);
+    setAlbumIsSaved((state) => !state);
   };
   const handleDeleteFromMyAlbums = async () => {
     await removeFromMySavedAlbums(album.id);
     await clearSavedAlbums();
     await getMySavedAlbums();
-    setAlbumIsSaved(state => !state);
+    setAlbumIsSaved((state) => !state);
   };
   const handleAddTrack = async (trackId) => {
-    console.log("trackId", trackId);
     await addToMySavedTracks(trackId);
     await clearSavedTracks();
     await getMySavedTracks();
   };
 
   const handleAddToPlaylist = async (playlistId, trackUri) => {
-
     let status = await addToPlaylist(playlistId, trackUri);
-    console.log('status',status);
+
     if (status) {
       notification.open({
-        message: 'Track was added to playlist',
-        duration: 3 
+        message: "Track was added to playlist",
+        duration: 3,
       });
     } else {
       notification.open({
-        message: 'Track is already in playlist',
-        duration: 3 
+        message: "Track is already in playlist",
+        duration: 3,
       });
     }
   };
 
   const checkForSavedAlbum = (albumId) => {
-    console.log('mySavedAlbums', mySavedAlbums);
-    mySavedAlbums.length !==0 && mySavedAlbums.forEach(savedAlbum => {
-      console.log('savedAlbum.id', savedAlbum.album.id);
-      console.log('album.id', albumId);
-      if (savedAlbum.album.id === albumId) {
-        console.log('папапа');
-        setAlbumIsSaved(true);
-      }
-    })
-  }
-  
+
+    mySavedAlbums.length !== 0 &&
+      mySavedAlbums.forEach((savedAlbum) => {
+        if (savedAlbum.album.id === albumId) {
+          setAlbumIsSaved(true);
+        }
+      });
+  };
 
   return (
     <>
-      {album && <Row>
-        <Col span={8}>
-          <Image width={300} src={album.images.length !== 0 && album.images[imageIndex].url} />
-        </Col>
-        <Col span={16}>
-          <Title
-            level={2}
-          >{`${album.tracks.items[0].artists[0].name} - ${album.name}`}</Title>
-          <Title level={4}>{`Released: ${album.release_date}`}</Title>
-          <Title level={4}>{`Popularity: ${album.popularity}`}</Title>
-          <Title level={4}>{`Total tracks: ${album.total_tracks}`}</Title>
-          {albumIsSaved ? <Button onClick={() => handleDeleteFromMyAlbums()}>Unsave</Button> : <Button onClick={() => handleAddToMyAlbums()}>Save</Button>}
-        </Col>
-      </Row>}
+      {album && (
+        <Row>
+          <Col span={8}>
+            <Image
+              width={300}
+              src={album.images.length !== 0 && album.images[imageIndex].url}
+            />
+          </Col>
+          <Col span={16}>
+            <Title
+              level={2}
+            >{`${album.tracks.items[0].artists[0].name} - ${album.name}`}</Title>
+            <Title level={4}>{`Released: ${album.release_date}`}</Title>
+            <Title level={4}>{`Popularity: ${album.popularity}`}</Title>
+            <Title level={4}>{`Total tracks: ${album.total_tracks}`}</Title>
+            {albumIsSaved ? (
+              <Button onClick={() => handleDeleteFromMyAlbums()}>Unsave</Button>
+            ) : (
+              <Button onClick={() => handleAddToMyAlbums()}>Save</Button>
+            )}
+          </Col>
+        </Row>
+      )}
 
       <Row>
         <Col span={24}>

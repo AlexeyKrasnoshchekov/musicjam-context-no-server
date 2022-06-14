@@ -22,9 +22,8 @@
 .albums-grid, .artists-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-gap: 0.5rem;
   justify-content: space-between;
-  outline: 2px solid red;
-  margin-bottom: 4rem;;
+  margin-bottom: 4rem;
 }

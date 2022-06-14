@@ -1,0 +1,22 @@
+.home {
+    height: 100%;
+    /* outline: 1px solid wheat; */
+    margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-image: url('./background_photo_desktop.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.fade-enter {
+  opacity: 0;
+  
+  /* transition: opacity 500ms linear; */
+}
+.fade-enter.fade-enter-active {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 1000ms ease-in;
+}

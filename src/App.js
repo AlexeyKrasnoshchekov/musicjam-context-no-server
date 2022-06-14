@@ -1,10 +1,13 @@
 import { useContext } from "react";
-// import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
 import Playlist from "./components/Playlist/Playlist";
-import ArtistPage from './components/ArtistPage//ArtistPage';
-import SavedTracks from './components/SavedTracks/savedTracks';
+import ArtistPage from "./components/ArtistPage//ArtistPage";
+import SavedTracks from "./components/SavedTracks/savedTracks";
 
 import Login from "./pages/Login";
 import Container from "./components/Container/Container";
@@ -14,10 +17,7 @@ import SearchResults from "./components/SearchResults/SearchResults";
 import Album from "./components/Album/Album";
 
 export default function App() {
-
-  const {
-    tokenIsSet,
-  } = useContext(context);
+  const { tokenIsSet } = useContext(context);
 
   return (
     <Router>

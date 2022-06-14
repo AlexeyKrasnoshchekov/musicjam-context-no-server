@@ -28,8 +28,7 @@ h2 {
 
 .App {
   height: 100%;
-  
-
+  /* border: 2px solid blue; */
   font-family: 'Work Sans', sans-serif;
   font-weight: 500;
   color: lightcyan;
@@ -48,3 +47,5 @@ h2 {
     flex-direction: column;
   }
 }
+
+

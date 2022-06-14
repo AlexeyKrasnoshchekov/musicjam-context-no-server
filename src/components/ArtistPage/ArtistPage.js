@@ -1,10 +1,6 @@
-import {
-  Col,
-  Image,
-  Row,
-  Typography,
-  Card
-} from "antd";
+import { Col, Image, Row, Typography, Card } from "antd";
+
+import "../SearchResults/SearchResults.css";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -23,18 +19,17 @@ export default function Album() {
     getArtistAlbums,
     getArtistRelatedArtists,
     relatedArtists,
-    artistAlbums
+    artistAlbums,
   } = useContext(context);
 
   const initialRender = useRef(true);
-  const {id} = useParams();
+  const { id } = useParams();
 
   const handleGetArtist = async (id) => {
-    console.log('id11122', id);
+    console.log("id11122", id);
     await getArtist(id);
     await getArtistAlbums(id);
     await getArtistRelatedArtists(id);
-    
   };
 
   useEffect(() => {
@@ -43,7 +38,6 @@ export default function Album() {
       return;
     }
     token === "" && refreshPage();
-    
   }, [token]);
 
   useEffect(() => {
@@ -52,101 +46,100 @@ export default function Album() {
       return;
     }
     handleGetArtist(id);
-    
   }, [id]);
 
   return (
     <>
-      {artist && <Row>
-        <Col span={8}>
-          <Image width={300} src={artist.images.length !== 0 && artist.images[imageIndex].url} />
-        </Col>
-        <Col span={16}>
-          <Title
-            level={2}
-          >{`${artist.name}`}</Title>
-          <Title level={4}>{`Genres: ${artist.genres.join('; ')}`}</Title>
-          <Title level={4}>{`Popularity: ${artist.popularity}`}</Title>
-        </Col>
-      </Row>}
+      {artist && (
+        <Row>
+          <Col span={8}>
+            <Image
+              width={300}
+              src={artist.images.length !== 0 && artist.images[imageIndex].url}
+            />
+          </Col>
+          <Col span={16}>
+            <Title level={2}>{`${artist.name}`}</Title>
+            <Title level={4}>{`Genres: ${artist.genres.join("; ")}`}</Title>
+            <Title level={4}>{`Popularity: ${artist.popularity}`}</Title>
+          </Col>
+        </Row>
+      )}
 
-
-
-      {artistAlbums.length !==0 && <Row>
-        <Col span={24}>
-              <Title level={4}>Albums</Title>
-              <div className="albums-grid">
-                {artistAlbums.length !== 0 &&
-                  artistAlbums.map((album, index) => {
-                    return (
-                      <Card
+      {artistAlbums.length !== 0 && (
+        <Row>
+          <Col span={24}>
+            <Title level={4}>Albums</Title>
+            <div className="albums-grid">
+              {artistAlbums.length !== 0 &&
+                artistAlbums.map((album, index) => {
+                  return (
+                    <Card
                       hoverable
-                        title={album.name}
-                        extra={<Link to={`/album/${album.id}`}>More</Link>}
-                        style={{
-                          width: 300,
-                          height: 300,
-                          backgroundImage: `url(${album.images[1].url})`,
-                        }}
-                        bodyStyle={{
-                          color: 'lightgray',
-                          height: "calc(100% - 3rem",
-                          backgroundColor: "rgba(000, 000, 000, 0.5)",
-                        }}
-                        headStyle={{
-                          color: 'lightgray',
-                          height: "3rem",
-                          backgroundColor: "rgba(000, 000, 000, 0.5)",
-                        }}
-                      >
-                        <p>{`Artist: ${album.artists[0].name}`}</p>
-                        <p>{`Released: ${album.release_date}`}</p>
-                        <p>{`Total tracks: ${album.total_tracks}`}</p>
-                        {/* {mySavedAlbums.filter(savedAlbum => savedAlbum.album.id === album.id).length === 0 && <Button onClick={()=> {handleAddToMyAlbums(album.id)}}>Save</Button>} */}
-                      </Card>
-                    );
-                  })}
-              </div>
-        </Col>
-      </Row>}
-      {relatedArtists.length !== 0 && (
-            <div>
-              <Title level={4}>Artists</Title>
-              <div className="artists-grid">
-                {relatedArtists.map((artist, index) => {
-                    // console.log('artist.images[1]', artist.images[1].url)
-                    return (
-                      <Card
-                      hoverable
-                        title={artist.name}
-                        extra={<Link to={`/artist/${artist.id}`}>More</Link>}
-                        style={{
-                          
-                          width: 300,
-                          height: 300,
-                          backgroundImage: `url(${
-                            artist.images.length !== 0 && artist.images[1].url
-                          })`,
-                        }}
-                        bodyStyle={{
-                          color: 'lightgray',
-                          height: "calc(100% - 3rem",
-                          backgroundColor: "rgba(000, 000, 000, 0.5)",
-                        }}
-                        headStyle={{
-                          color: 'lightgray',
-                          height: "3rem",
-                          backgroundColor: "rgba(000, 000, 000, 0.5)",
-                        }}
-                      >
-                        <p>{`Genres: ${artist.genres.join('; ')}`}</p>
-                        <p>{`Popularity: ${artist.popularity}`}</p>
-                      </Card>
-                    );
-                  })}
-              </div>
+                      title={album.name}
+                      extra={<Link to={`/album/${album.id}`}>More</Link>}
+                      style={{
+                        width: "15rem",
+                        height: "15rem",
+                        backgroundImage: `url(${album.images[1].url})`,
+                      }}
+                      bodyStyle={{
+                        color: "lightgray",
+                        height: "calc(100% - 3rem",
+                        backgroundColor: "rgba(000, 000, 000, 0.5)",
+                      }}
+                      headStyle={{
+                        color: "lightgray",
+                        height: "3rem",
+                        backgroundColor: "rgba(000, 000, 000, 0.5)",
+                      }}
+                    >
+                      <p>{`Artist: ${album.artists[0].name}`}</p>
+                      <p>{`Released: ${album.release_date}`}</p>
+                      <p>{`Total tracks: ${album.total_tracks}`}</p>
+                    </Card>
+                  );
+                })}
             </div>
-          )}
+          </Col>
+        </Row>
+      )}
+      {relatedArtists.length !== 0 && (
+        <div>
+          <Title level={4}>Related artists</Title>
+          <div className="artists-grid">
+            {relatedArtists.map((artist, index) => {
+              return (
+                <Card
+                  hoverable
+                  title={artist.name}
+                  extra={<Link to={`/artist/${artist.id}`}>More</Link>}
+                  style={{
+                    width: "15rem",
+                    height: "15rem",
+                    backgroundImage: `url(${
+                      artist.images.length !== 0 && artist.images[1].url
+                    })`,
+                  }}
+                  bodyStyle={{
+                    color: "lightgray",
+                    height: "calc(100% - 3rem",
+                    backgroundColor: "rgba(000, 000, 000, 0.5)",
+                  }}
+                  headStyle={{
+                    color: "lightgray",
+                    height: "3rem",
+                    backgroundColor: "rgba(000, 000, 000, 0.5)",
+                  }}
+                >
+                  <p>{`Genres: ${artist.genres.join("; ")}`}</p>
+                  <p>{`Popularity: ${artist.popularity}`}</p>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </>
   );
 }

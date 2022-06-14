@@ -4,7 +4,6 @@ import SpotifyWebApi from "spotify-web-api-js";
 import reducer from "./reducer";
 import {
   SET_TOKEN,
-  // SET_TOKEN_EXPIRES_IN,
   SET_TOKEN_IS_SET,
   SET_PLAYLISTS,
   SET_ARTIST_ALBUMS,
@@ -22,8 +21,7 @@ import {
   CLEAR_SAVED_ALBUMS,
   CLEAR_PLAYLISTS,
   CLEAR_PLAYLIST_ITEMS,
-  // SET_CATEGORIES,
-  SET_ARTIST
+  SET_ARTIST,
 } from "./reducer";
 
 export const context = createContext();
@@ -31,7 +29,6 @@ export const context = createContext();
 const State = (props) => {
   const initialState = {
     token: "",
-    // expiresIn: 0,
     tokenIsSet: false,
     urlIsSet: false,
     playlists: [],
@@ -54,49 +51,28 @@ const State = (props) => {
   const spotifyApi = new SpotifyWebApi();
 
   const setToken = (token) => {
-    console.log("token777", token);
     dispatch({ type: SET_TOKEN, payload: token });
   };
-  // const setTokenExpiresIn = (expiresIn) => {
-  //   console.log("expiresIn777", typeof expiresIn);
-  //   dispatch({ type: SET_TOKEN_EXPIRES_IN, payload: expiresIn });
-  // };
   const setTokenIsSet = (bool) =>
     dispatch({ type: SET_TOKEN_IS_SET, payload: bool });
 
-  // const getToken = async () => {
-  //   const token = await getAccessToken();
-  //   console.log("token", token);
-  //   // await spotifyApi.setAccessToken(token);
-  //   // token !== "" && setTokenIsSet(true);
-  //   // setToken(token);
-  //   // console.log("token2", state.token);
-  // };
   const auth = () => {
-    console.log("auth", state.token);
     spotifyApi.setAccessToken(state.token);
   };
 
   const refreshPage = () => {
-    let tokenFromLS = localStorage.getItem('token');
-    tokenFromLS !=="" && spotifyApi.setAccessToken(tokenFromLS);
+    let tokenFromLS = localStorage.getItem("token");
+    tokenFromLS !== "" && spotifyApi.setAccessToken(tokenFromLS);
   };
 
   const logout = () => {
-    console.log("222333");
-    // spotifyApi.setAccessToken("");
-    //setAccessToken("");
     setTokenIsSet(false);
   };
 
   const getPlaylists = async () => {
-    console.log("getPlaylists");
 
     try {
       let data = await spotifyApi.getUserPlaylists();
-      console.log("data333", data);
-      // let data2 = await data.json();
-      // return data.items; // note that we don't pass a user id
 
       if (data) {
         if (data.items.length !== 0) {
@@ -126,7 +102,6 @@ const State = (props) => {
   const getPlaylist = async (playlistId) => {
     try {
       let data = await spotifyApi.getPlaylist(playlistId);
-      // console.log("data555", data);
       dispatch({
         type: SET_PLAYLIST,
         payload: data,
@@ -139,44 +114,35 @@ const State = (props) => {
           });
         });
       }
-
     } catch (error) {
       console.log(error);
     }
   };
   const getAlbum = async (albumId) => {
-    console.log("albumId", albumId);
     try {
       let data = await spotifyApi.getAlbum(albumId);
-      console.log("data888", data);
       dispatch({
         type: SET_ALBUM,
         payload: data,
       });
-      
     } catch (error) {
       console.log(error);
     }
   };
   const getArtist = async (artistId) => {
-    console.log("artistId", artistId);
     try {
       let data = await spotifyApi.getArtist(artistId);
-      console.log("data888", data);
       await dispatch({
         type: SET_ARTIST,
         payload: data,
       });
-      console.log("data999", state.artist);
     } catch (error) {
       console.log(error);
     }
   };
   const getArtistAlbums = async (artistId) => {
-    console.log("artistId", artistId);
     try {
-      let data = await spotifyApi.getArtistAlbums(artistId, {limit: 10});
-      console.log("getArtistAlbums", data);
+      let data = await spotifyApi.getArtistAlbums(artistId, { limit: 10 });
 
       if (data.items.length !== 0) {
         data.items.forEach((item) => {
@@ -186,18 +152,14 @@ const State = (props) => {
           });
         });
       }
-
-      // console.log("data999", state.artist);
     } catch (error) {
       console.log(error);
     }
   };
 
   const getArtistRelatedArtists = async (artistId) => {
-    console.log("artistId", artistId);
     try {
       let data = await spotifyApi.getArtistRelatedArtists(artistId);
-      console.log("getArtistRelatedArtists", data);
 
       if (data.artists.length !== 0) {
         data.artists.forEach((item) => {
@@ -207,19 +169,17 @@ const State = (props) => {
           });
         });
       }
-      // console.log("data999", state.artist);
     } catch (error) {
       console.log(error);
     }
   };
- 
 
   const addToPlaylist = async (playlistId, uri) => {
     let playlistTracks = await spotifyApi.getPlaylistTracks(playlistId);
-    
-    // console.log('playlistTracks1122',playlistTracks);
 
-    if (playlistTracks.items.filter(item => item.track.uri === uri).length === 0) {
+    if (
+      playlistTracks.items.filter((item) => item.track.uri === uri).length === 0
+    ) {
       try {
         await spotifyApi.addTracksToPlaylist(playlistId, [uri]);
         return true;
@@ -229,14 +189,10 @@ const State = (props) => {
     } else {
       return false;
     }
-    
   };
   const removeFromPlaylist = async (playlistId, uri, trackId) => {
-    console.log("removeTracksFromPlaylist1", playlistId);
-    console.log("removeTracksFromPlaylist2", uri);
     try {
       await spotifyApi.removeTracksFromPlaylist(playlistId, [uri]);
-      console.log("removeTracksFromPlaylist", playlistId);
       await dispatch({
         type: DELETE_PLAYLIST_ITEM,
         payload: trackId,
@@ -246,8 +202,6 @@ const State = (props) => {
     }
   };
   const addToMySavedAlbums = async (albumId) => {
-    console.log("albumId", albumId);
-    console.log("albumId2", typeof albumId);
     try {
       await spotifyApi.addToMySavedAlbums([albumId]);
     } catch (error) {
@@ -255,10 +209,8 @@ const State = (props) => {
     }
   };
   const getMySavedAlbums = async () => {
-    console.log("getMySavedAlbums");
     try {
       let data = await spotifyApi.getMySavedAlbums();
-      console.log("datagetMySavedAlbums", data);
       if (data) {
         if (data.items.length !== 0) {
           data.items.forEach((item) => {
@@ -274,22 +226,18 @@ const State = (props) => {
     }
   };
   const addToMySavedTracks = async (trackId) => {
-    // console.log("albumId", track);
     try {
       await spotifyApi.addToMySavedTracks([trackId]);
-
     } catch (error) {
       console.log(error);
     }
   };
   const removeFromMySavedTracks = async (savedTrackIndex) => {
-    // console.log("removeTracksFromPlaylist1", playlistId);
-    
-    const savedTrackId = state.mySavedTracks.filter((_, index) => index === savedTrackIndex)[0].track.id;
-    console.log("removeTracksFromPlaylist2", savedTrackId);
+    const savedTrackId = state.mySavedTracks.filter(
+      (_, index) => index === savedTrackIndex
+    )[0].track.id;
     try {
       await spotifyApi.removeFromMySavedTracks([savedTrackId]);
-      // console.log("removeTracksFromPlaylist", trackId);
       await dispatch({
         type: DELETE_MY_TRACKS_ITEM,
         payload: savedTrackId,
@@ -299,26 +247,15 @@ const State = (props) => {
     }
   };
   const removeFromMySavedAlbums = async (albumId) => {
-    // console.log("removeTracksFromPlaylist1", playlistId);
-    
-    // const savedTrackId = state.mySavedTracks.filter((_, index) => index === savedTrackIndex)[0].track.id;
-    console.log("removeTracksFromPlaylist2", albumId);
     try {
       await spotifyApi.removeFromMySavedAlbums([albumId]);
-      // console.log("removeTracksFromPlaylist", trackId);
-      // await dispatch({
-      //   type: DELETE_MY_TRACKS_ITEM,
-      //   payload: savedTrackId,
-      // });
     } catch (error) {
       console.log(error);
     }
   };
   const getMySavedTracks = async () => {
-    console.log("getMySavedAlbums");
     try {
       let data = await spotifyApi.getMySavedTracks();
-      console.log("datagetMySavedTracks", data);
       if (data) {
         if (data.items.length !== 0) {
           data.items.forEach((item) => {
@@ -334,38 +271,17 @@ const State = (props) => {
     }
   };
 
-  // const getCategories = async () => {
-  //   // console.log("getMyTopTracks");
-  //   try {
-  //     let data = await spotifyApi.getCategories();
-  //     console.log("getCategories", data);
-  //     if (data) {
-  //       if (data.categories.items.length !== 0) {
-  //         data.categories.items.forEach((item) => {
-  //           dispatch({
-  //             type: SET_CATEGORIES,
-  //             payload: item,
-  //           });
-  //         });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const createPlaylist = async (playlistName) => {
     const data = await spotifyApi.getMe();
-    console.log("data2323", data);
+
     try {
       let newPlaylist = await spotifyApi.createPlaylist(data.id, {
         name: playlistName,
       });
-      console.log("data4455", newPlaylist.id);
       await spotifyApi.addTracksToPlaylist(newPlaylist.id, [
         "spotify:track:2bfGNzdiRa1jXZRdfssSzR",
       ]);
-      console.log("createPlaylist");
+
     } catch (error) {
       console.log(error);
     }
@@ -375,30 +291,14 @@ const State = (props) => {
     // spotifyApi.setAccessToken(state.token);
     try {
       let data = await spotifyApi.search(searchTerm, types, { limit: 5 });
-      console.log("data777", data);
       dispatch({
         type: SET_SEARCH_RESULT,
         payload: data,
       });
-      console.log("searchresl", state.searchResult);
     } catch (error) {
       console.log(error);
     }
   };
-  // const searchAlbum = async (albumName) => {
-  //   console.log("albumName", albumName);
-  //   const types = ["album"];
-  //   try {
-  //     let data = await spotifyApi.search(albumName, types, { limit: 5 });
-  //     dispatch({
-  //       type: SET_SEARCH_RESULT,
-  //       payload: data,
-  //     });
-  //     // console.log("data999", state.album);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const clearSavedTracks = () => dispatch({ type: CLEAR_SAVED_TRACKS });
   const clearSavedAlbums = () => dispatch({ type: CLEAR_SAVED_ALBUMS });
@@ -409,7 +309,6 @@ const State = (props) => {
     <context.Provider
       value={{
         token: state.token,
-        // expiresIn: state.expiresIn,
         tokenIsSet: state.tokenIsSet,
         playlists: state.playlists,
         playlist: state.playlist,
@@ -422,7 +321,6 @@ const State = (props) => {
         playlistItems: state.playlistItems,
         artistAlbums: state.artistAlbums,
         relatedArtists: state.relatedArtists,
-        // categories: state.categories,
         setToken,
         auth,
         logout,
@@ -431,7 +329,6 @@ const State = (props) => {
         getPlaylist,
         setTokenIsSet,
         search,
-        // saveAlbum,
         addToPlaylist,
         removeFromPlaylist,
         createPlaylist,
@@ -445,13 +342,10 @@ const State = (props) => {
         removeFromMySavedAlbums,
         clearPlaylists,
         clearPlaylistItems,
-        // getMyTopArtists,
-        // getCategories,
         getArtist,
         getArtistAlbums,
         getArtistRelatedArtists,
-        refreshPage
-
+        refreshPage,
       }}
     >
       {props.children}

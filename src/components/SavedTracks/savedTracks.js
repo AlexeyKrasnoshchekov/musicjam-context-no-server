@@ -44,7 +44,7 @@ export default function SavedAlbums() {
       dataIndex: "artist",
       render: (text, record, rowIndex) => {
         let elem = mySavedTracks.filter((item, i) => rowIndex === i)[0];
-        return <Link to={`/artist/${elem.track.artists[0].id}`}>{elem.track.artists[0].name}</Link>
+        elem && <Link to={`/artist/${elem.track.artists[0].id}`}>{elem.track.artists[0].name}</Link>
       },
     },
     {
@@ -58,7 +58,7 @@ export default function SavedAlbums() {
       key: "album",
       render: (text, record, rowIndex) => {
         let elem = mySavedTracks.filter((item, i) => rowIndex === i)[0];
-        return <Link to={`/album/${elem.track.album.id}`}>{elem.track.album.name}</Link>
+        elem && <Link to={`/album/${elem.track.album.id}`}>{elem.track.album.name}</Link>
       },
     },
     {
@@ -88,7 +88,7 @@ export default function SavedAlbums() {
   const formatData = () => {
     mySavedTracks.length !== 0 &&
       mySavedTracks.forEach((item) => {
-        setData1(
+        createDataObj(
           item.added_at.split("T")[0],
           item.track.name,
           item.track.artists[0].name,
@@ -99,7 +99,7 @@ export default function SavedAlbums() {
       });
   };
 
-  const setData1 = (added, name, artist, album, released, duration) => {
+  const createDataObj = (added, name, artist, album, released, duration) => {
     let obj = {
       added: "",
       name: "",

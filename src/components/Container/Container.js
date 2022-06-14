@@ -1,15 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 import MyHeader from "../Header/Header";
-import { Link, matchPath, useRouteMatch } from "react-router-dom";
+import { Link, matchPath, useLocation, useRouteMatch } from "react-router-dom";
 
-import {
-  Layout,
-  Menu,
-  Modal,
-  Input,
-  Button,
-} from "antd";
-
+import { Layout, Menu, Modal, Input, Button } from "antd";
+import "./container.css";
 import {
   UnorderedListOutlined,
   PlaySquareOutlined,
@@ -24,6 +19,7 @@ const { Header, Content, Sider } = Layout;
 const Container = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const location = useLocation();
 
   const {
     playlists,
@@ -38,15 +34,13 @@ const Container = (props) => {
 
   const initialRender = useRef(true);
   const history = useHistory();
-  
-  const {path} =  useRouteMatch();
+
+  const { path } = useRouteMatch();
   const isHome = matchPath(path, {
     path: "/",
     exact: true,
     strict: false,
   });
-  console.log('isHome', isHome);
-  // console.log('match', match.url);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -75,13 +69,15 @@ const Container = (props) => {
   return (
     <Layout
       style={{
-        minHeight: "100vh",
+        minHeight: "100%",
       }}
+      hasSider={true}
     >
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        width={"20%"}
       >
         <Menu
           mode="inline"
@@ -116,9 +112,7 @@ const Container = (props) => {
               {playlists.map((playlist, index) => {
                 const subKey = 1 + index + 1;
                 return (
-                  <Menu.Item
-                    key={subKey}
-                  >
+                  <Menu.Item key={subKey}>
                     <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
                   </Menu.Item>
                 );
@@ -133,13 +127,11 @@ const Container = (props) => {
             {mySavedAlbums.map((item, index) => {
               const subKey = 1 + playlists.length + index + 1;
               return (
-                <Menu.Item
-                  key={subKey}
-                ><Link to={`/album/${item.album.id}`}> 
-                {`${item.album.name} (${item.album.artists[0].name})`}
-                </Link>
-                  
-                  </Menu.Item>
+                <Menu.Item key={subKey}>
+                  <Link to={`/album/${item.album.id}`}>
+                    {`${item.album.name} (${item.album.artists[0].name})`}
+                  </Link>
+                </Menu.Item>
               );
             })}
           </SubMenu>
@@ -156,27 +148,25 @@ const Container = (props) => {
       </Sider>
       <Layout className="site-layout">
         <Header>
-          {/* <div className="logo" /> */}
           <MyHeader />
         </Header>
+
         <Content
           className={isHome && "home"}
+          style={{
+            padding: 20,
+            overflowY: 'scroll'
+          }}
         >
-          <div
-            className="site-layout-background"
-            style={{
-              padding: 20,
-            }}
-          >
-            {props.children}
-          </div>
+          <TransitionGroup>
+            <CSSTransition timeout={1000} classNames="fade" key={location.key}>
+              <>{props.children}</>
+            </CSSTransition>
+          </TransitionGroup>
         </Content>
-
       </Layout>
     </Layout>
   );
 };
 
 export default Container;
-
-

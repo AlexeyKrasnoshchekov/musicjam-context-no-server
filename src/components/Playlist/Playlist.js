@@ -130,7 +130,7 @@ export default function Playlist() {
     playlistItems.forEach((item) => {
         console.log('item', item);
 
-        setData1(
+        createDataObj(
           item.track.name,
           item.track.artists[0].name,
           item.added_at.split("T")[0],
@@ -145,7 +145,7 @@ export default function Playlist() {
       });
   };
 
-  const setData1 = (name, artist, added, released, album, duration, id, uri, artistId, albumId) => {
+  const createDataObj = (name, artist, added, released, album, duration, id, uri, artistId, albumId) => {
     let obj = {
       name: "",
       artist: "",

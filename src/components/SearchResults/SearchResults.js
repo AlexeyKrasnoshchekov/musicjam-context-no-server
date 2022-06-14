@@ -1,8 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { context } from "../../context/context";
 import "./SearchResults.css";
-import { Button, Card, Dropdown, Menu, Space, Table, Typography, notification } from "antd";
+import {
+  Button,
+  Card,
+  Dropdown,
+  Menu,
+  Space,
+  Table,
+  Typography,
+  notification,
+} from "antd";
 import { HeartOutlined, PlusSquareOutlined } from "@ant-design/icons";
 
 export default function SearchResults() {
@@ -17,20 +26,33 @@ export default function SearchResults() {
     playlists,
     mySavedAlbums,
     mySavedTracks,
-    clearSavedTracks,
     getMySavedTracks,
+    clearSavedTracks,
     addToPlaylist,
     addToMySavedTracks,
   } = useContext(context);
-  console.log("searchResult222", searchResult);
 
   const history = useHistory();
-
+  const initialRender = useRef(true);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    searchResult && searchResult.tracks && searchResult.tracks.items.length !== 0 && setData([]);
-    searchResult && searchResult.tracks && searchResult.tracks.items.length !== 0 && formatData();
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    getMySavedTracks();
+  }, []);
+
+  useEffect(() => {
+    searchResult &&
+      searchResult.tracks &&
+      searchResult.tracks.items.length !== 0 &&
+      setData([]);
+    searchResult &&
+      searchResult.tracks &&
+      searchResult.tracks.items.length !== 0 &&
+      formatData();
   }, [searchResult]);
 
   const handleGetAlbum = async (id) => {
@@ -43,8 +65,6 @@ export default function SearchResults() {
     await clearSavedAlbums();
     await getMySavedAlbums();
   };
-
-  
 
   const columns = [
     {
@@ -65,7 +85,9 @@ export default function SearchResults() {
       onCell: (record, rowIndex) => {
         return {
           onClick: () => {
-            let elem = searchResult.tracks.items.filter((item, i) => rowIndex === i)[0];
+            let elem = searchResult.tracks.items.filter(
+              (item, i) => rowIndex === i
+            )[0];
             handleGetAlbum(elem.album.id);
           }, // click row
         };
@@ -93,7 +115,9 @@ export default function SearchResults() {
       align: "center",
       render: (text, record, rowIndex) => {
         let elem = data.filter((item, i) => rowIndex === i)[0];
-        if (mySavedTracks.filter(item => item.track.id === elem.id).length === 0) {return <HeartOutlined />}
+        
+        return ((!elem.isSaved && mySavedTracks.filter(item => item.track.id === elem.id).length === 0) ? <HeartOutlined /> : <></>);
+        // mySavedTracks.filter(item => item.track.id === elem.id).length === 0 ? <span></span> : <HeartOutlined />;
       },
       onCell: (record, rowIndex) => {
         return {
@@ -139,11 +163,15 @@ export default function SearchResults() {
     },
   ];
 
+
   const formatData = () => {
-    // let dataArr = [];
+    let trackIsSaved = false;
     searchResult.tracks.items.length !== 0 &&
       searchResult.tracks.items.forEach((item) => {
-        setData1(
+        
+        trackIsSaved = mySavedTracks.some((elem) => elem.track.name === item.name);
+
+        createDataObj(
           item.name,
           item.artists[0].name,
           item.album.name,
@@ -151,12 +179,23 @@ export default function SearchResults() {
           item.duration_ms / 1000,
           item.popularity,
           item.uri,
-          item.id
+          item.id,
+          trackIsSaved
         );
       });
   };
 
-  const setData1 = (name, artist, album, released, duration, popularity, uri, id) => {
+  const createDataObj = (
+    name,
+    artist,
+    album,
+    released,
+    duration,
+    popularity,
+    uri,
+    id,
+    isSaved
+  ) => {
     let obj = {
       added: "",
       name: "",
@@ -167,6 +206,7 @@ export default function SearchResults() {
       popularity: 0,
       uri: "",
       id: "",
+      isSaved: false,
     };
 
     let duration_min = Math.floor(duration / 60);
@@ -180,29 +220,28 @@ export default function SearchResults() {
     obj.duration = `${duration_min}:${duration_sec}`;
     obj.uri = uri;
     obj.id = id;
+    obj.isSaved = isSaved;
     setData((data) => [...data, obj]);
   };
 
   const handleAddTrack = async (trackId) => {
-    console.log("trackId", trackId);
     await addToMySavedTracks(trackId);
     await clearSavedTracks();
     await getMySavedTracks();
+    formatData();
   };
 
   const handleAddToPlaylist = async (playlistId, trackUri) => {
-
     let status = await addToPlaylist(playlistId, trackUri);
-    console.log('status',status);
     if (status) {
       notification.open({
-        message: 'Track was added to playlist',
-        duration: 3 
+        message: "Track was added to playlist",
+        duration: 3,
       });
     } else {
       notification.open({
-        message: 'Track is already in playlist',
-        duration: 3 
+        message: "Track is already in playlist",
+        duration: 3,
       });
     }
   };
@@ -214,26 +253,28 @@ export default function SearchResults() {
           {searchResult.albums && (
             <div>
               <Title level={4}>Albums</Title>
+              {/* <Row>
+                <Col span={24}> */}
               <div className="albums-grid">
                 {searchResult.albums.items.length !== 0 &&
                   searchResult.albums.items.map((album, index) => {
                     return (
                       <Card
-                      hoverable
+                        hoverable
                         title={album.name}
                         extra={<Link to={`/album/${album.id}`}>More</Link>}
                         style={{
-                          width: 300,
-                          height: 300,
+                          width: "15rem",
+                          height: "15rem",
                           backgroundImage: `url(${album.images[1].url})`,
                         }}
                         bodyStyle={{
-                          color: 'lightgray',
+                          color: "lightgray",
                           height: "calc(100% - 3rem",
                           backgroundColor: "rgba(000, 000, 000, 0.5)",
                         }}
                         headStyle={{
-                          color: 'lightgray',
+                          color: "lightgray",
                           height: "3rem",
                           backgroundColor: "rgba(000, 000, 000, 0.5)",
                         }}
@@ -241,11 +282,23 @@ export default function SearchResults() {
                         <p>{`Artist: ${album.artists[0].name}`}</p>
                         <p>{`Released: ${album.release_date}`}</p>
                         <p>{`Total tracks: ${album.total_tracks}`}</p>
-                        {mySavedAlbums.filter(savedAlbum => savedAlbum.album.id === album.id).length === 0 && <Button onClick={()=> {handleAddToMyAlbums(album.id)}}>Save</Button>}
+                        {mySavedAlbums.filter(
+                          (savedAlbum) => savedAlbum.album.id === album.id
+                        ).length === 0 && (
+                          <Button
+                            onClick={() => {
+                              handleAddToMyAlbums(album.id);
+                            }}
+                          >
+                            Save
+                          </Button>
+                        )}
                       </Card>
                     );
                   })}
               </div>
+              {/* </Col>
+              </Row> */}
             </div>
           )}
           {searchResult.artists.items.length !== 0 && (
@@ -254,32 +307,30 @@ export default function SearchResults() {
               <div className="artists-grid">
                 {searchResult.artists.items &&
                   searchResult.artists.items.map((artist, index) => {
-                    // console.log('artist.images[1]', artist.images[1].url)
                     return (
                       <Card
-                      hoverable
+                        hoverable
                         title={artist.name}
                         extra={<Link to={`/artist/${artist.id}`}>More</Link>}
                         style={{
-                          
-                          width: 300,
-                          height: 300,
+                          width: "15rem",
+                          height: "15rem",
                           backgroundImage: `url(${
                             artist.images.length !== 0 && artist.images[1].url
                           })`,
                         }}
                         bodyStyle={{
-                          color: 'lightgray',
+                          color: "lightgray",
                           height: "calc(100% - 3rem",
                           backgroundColor: "rgba(000, 000, 000, 0.5)",
                         }}
                         headStyle={{
-                          color: 'lightgray',
+                          color: "lightgray",
                           height: "3rem",
                           backgroundColor: "rgba(000, 000, 000, 0.5)",
                         }}
                       >
-                        <p>{`Genres: ${artist.genres.join('; ')}`}</p>
+                        <p>{`Genres: ${artist.genres.join("; ")}`}</p>
                         <p>{`Popularity: ${artist.popularity}`}</p>
                       </Card>
                     );
@@ -287,18 +338,14 @@ export default function SearchResults() {
               </div>
             </div>
           )}
-            <div>
+          <div>
             <Title level={4}>Tracks</Title>
-              <div>
-                {data && (
-                  <Table
-                    pagination={false}
-                    columns={columns}
-                    dataSource={data}
-                  />
-                )}
-              </div>
+            <div>
+              {data && (
+                <Table pagination={false} columns={columns} dataSource={data} />
+              )}
             </div>
+          </div>
         </div>
       )}
     </div>
