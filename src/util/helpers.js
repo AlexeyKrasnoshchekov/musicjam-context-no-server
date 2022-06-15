@@ -1,5 +1,6 @@
 const clientId = "8ff9d45baf5b4833895018315692b108"; // Insert client ID here.
-const redirectUri = "http://https://alexeykrasnoshchekov.github.io/musicjam/callback"; // Have to add this to your accepted Spotify redirect URIs on the Spotify API.
+const redirectUri = "https://alexeykrasnoshchekov.github.io/musicjam/callback"; 
+// const redirectUri = "http://localhost:3000/callback"; 
 
 export const getAccessToken = () => {
   const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
