@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { context } from "../context/context";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { getAccessToken, setUrl } from "../util/helpers";
 import { Button, Col, Row, Divider, Image } from "antd";
 
@@ -10,6 +10,7 @@ export default function Login() {
 
   const initialRender = useRef(true);
   const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
     if (initialRender.current) {
@@ -22,6 +23,7 @@ export default function Login() {
       setToken(tokenLocal);
       localStorage.setItem("token", tokenLocal);
       setTokenIsSet(true);
+      history.push('/');
     }
   }, [authUrlIsSet]);
 
