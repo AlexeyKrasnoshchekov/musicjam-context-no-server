@@ -1,6 +1,6 @@
 const clientId = "8ff9d45baf5b4833895018315692b108"; // Insert client ID here.
-// const redirectUri = "https://alexeykrasnoshchekov.github.io/musicjam/callback"; 
-const redirectUri = "https://alexeykrasnoshchekov.github.io/musicjam/callback";
+const redirectUri = "http://localfost:3000/callback"; 
+// const redirectUri = "https://alexeykrasnoshchekov.github.io/musicjam/callback";
 
 export const getAccessToken = () => {
   const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
