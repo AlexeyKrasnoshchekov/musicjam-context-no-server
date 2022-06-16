@@ -19,6 +19,7 @@ export default function Login() {
 
     if (location.hash) {
       const tokenLocal = getAccessToken();
+      console.log('first',tokenLocal);
       setToken(tokenLocal);
       localStorage.setItem("token", tokenLocal);
       setTokenIsSet(true);

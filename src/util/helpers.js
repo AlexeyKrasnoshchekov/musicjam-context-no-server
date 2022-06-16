@@ -1,5 +1,6 @@
 const clientId = "8ff9d45baf5b4833895018315692b108"; // Insert client ID here.
-const redirectUri = "http://localfost:3000/callback"; 
+// const redirectUri = "http://musicjam-alex.surge.sh/callback"; 
+const redirectUri = "http://localhost:3000/callback"; 
 // const redirectUri = "https://alexeykrasnoshchekov.github.io/musicjam/callback";
 
 export const getAccessToken = () => {
@@ -7,7 +8,6 @@ export const getAccessToken = () => {
   if (accessTokenMatch) {
     const accessToken = accessTokenMatch[1];
     window.history.pushState("Access Token", null, "/"); // This clears the parameters, allowing us to grab a new access token when it expires.
-
     return accessToken;
   }
 };
