@@ -8,11 +8,21 @@ export default function Playlist() {
   const [imageIndex, setImageIndex] = useState(0);
   const [data, setData] = useState([]);
   const { Title } = Typography;
-  const {id} = useParams();
+  const { id } = useParams();
 
-  const { token,
-    refreshPage, playlist, playlistItems, clearPlaylistItems, getPlaylist, removeFromPlaylist,addToMySavedTracks, clearSavedTracks, getMySavedTracks, mySavedTracks } =
-    useContext(context);
+  const {
+    token,
+    refreshPage,
+    playlist,
+    playlistItems,
+    clearPlaylistItems,
+    getPlaylist,
+    removeFromPlaylist,
+    addToMySavedTracks,
+    clearSavedTracks,
+    getMySavedTracks,
+    mySavedTracks,
+  } = useContext(context);
   const initialRender = useRef(true);
 
   useEffect(() => {
@@ -29,19 +39,17 @@ export default function Playlist() {
       return;
     }
     token === "" && refreshPage();
-    
   }, [token]);
 
   useEffect(() => {
-    playlistItems.length !==0 && setData([]);
+    playlistItems.length !== 0 && setData([]);
     formatData();
   }, [playlistItems]);
 
   const handleGetPlaylist = async (id) => {
-    console.log('id11122', id);
+    console.log("id11122", id);
     await clearPlaylistItems();
     await getPlaylist(id);
-    
   };
 
   const columns = [
@@ -56,7 +64,7 @@ export default function Playlist() {
       dataIndex: "artist",
       render: (text, record, rowIndex) => {
         let elem = data.filter((item, i) => rowIndex === i)[0];
-        return <Link to={`/artist/${elem.artistId}`}>{elem.artist}</Link>
+        return <Link to={`/artist/${elem.artistId}`}>{elem.artist}</Link>;
       },
     },
     {
@@ -64,14 +72,14 @@ export default function Playlist() {
       dataIndex: "added",
       key: "added",
     },
-   
+
     {
       title: "Album",
       dataIndex: "album",
       key: "album",
       render: (text, record, rowIndex) => {
         let elem = data.filter((item, i) => rowIndex === i)[0];
-        return <Link to={`/album/${elem.albumId}`}>{elem.album}</Link>
+        return <Link to={`/album/${elem.albumId}`}>{elem.album}</Link>;
       },
     },
     {
@@ -90,7 +98,11 @@ export default function Playlist() {
       align: "center",
       render: (text, record, rowIndex) => {
         let elem = data.filter((item, i) => rowIndex === i)[0];
-        if (mySavedTracks.filter(item => item.track.id === elem.id).length === 0) {return <HeartOutlined />}
+        if (
+          mySavedTracks.filter((item) => item.track.id === elem.id).length === 0
+        ) {
+          return <HeartOutlined />;
+        }
       },
       onCell: (record, rowIndex) => {
         return {
@@ -127,8 +139,8 @@ export default function Playlist() {
 
   const formatData = () => {
     playlistItems &&
-    playlistItems.forEach((item) => {
-        console.log('item', item);
+      playlistItems.forEach((item) => {
+        console.log("item", item);
 
         createDataObj(
           item.track.name,
@@ -140,12 +152,23 @@ export default function Playlist() {
           item.track.id,
           item.track.uri,
           item.track.artists[0].id,
-          item.track.album.id,
+          item.track.album.id
         );
       });
   };
 
-  const createDataObj = (name, artist, added, released, album, duration, id, uri, artistId, albumId) => {
+  const createDataObj = (
+    name,
+    artist,
+    added,
+    released,
+    album,
+    duration,
+    id,
+    uri,
+    artistId,
+    albumId
+  ) => {
     let obj = {
       name: "",
       artist: "",
@@ -156,7 +179,7 @@ export default function Playlist() {
       uri: "",
       id: "",
       artistId: "",
-      albumId: ""
+      albumId: "",
     };
 
     let duration_min = Math.floor(duration / 60);
@@ -174,17 +197,23 @@ export default function Playlist() {
     obj.albumId = albumId;
     setData((data) => [...data, obj]);
   };
-  
+
   return (
     <>
-      {playlist && <Row>
-        <Col span={8}>
-          <Image width={200} src={playlist.images[imageIndex].url} />
-        </Col>
-        <Col span={16}>
-          <Title level={2}>{playlist.name}</Title>
-        </Col>
-      </Row>}
+      {playlist && (
+        <Row>
+          <Col
+            md={{ backgroundColor: "red" }}
+            sm={{ backgroundColor: "blue" }}
+            span={8}
+          >
+            <Image width={200} src={playlist.images[imageIndex].url} />
+          </Col>
+          <Col span={16}>
+            <Title level={2}>{playlist.name}</Title>
+          </Col>
+        </Row>
+      )}
 
       <Row>
         <Col span={24}>

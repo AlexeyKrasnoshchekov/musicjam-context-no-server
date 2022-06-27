@@ -78,6 +78,8 @@ const Container = (props) => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
         width={"20%"}
+        
+        // style={{display: {sm: "none"}}}
       >
         <Menu
           mode="inline"
