@@ -16,7 +16,7 @@ export default function Login() {
       initialRender.current = false;
       return;
     }
-
+    console.log('333');
     if (location.hash) {
       const tokenLocal = getAccessToken();
       console.log('first',tokenLocal);
@@ -28,10 +28,11 @@ export default function Login() {
 
   const handleLogin = () => {
     if (token === "") {
+      console.log('222');
       setUrl();
       setAuthUrlIsSet(true);
     } else {
-      setTokenIsSet(true);
+      setTokenIsSet(false);
     }
   };
 
