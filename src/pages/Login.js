@@ -32,7 +32,7 @@ export default function Login() {
       setUrl();
       setAuthUrlIsSet(true);
     } else {
-      setTokenIsSet(false);
+      setTokenIsSet(true);
     }
   };
 
