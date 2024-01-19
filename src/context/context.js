@@ -53,8 +53,10 @@ const State = (props) => {
   const setToken = (token) => {
     dispatch({ type: SET_TOKEN, payload: token });
   };
-  const setTokenIsSet = (bool) =>
+  const setTokenIsSet = (bool) => {
+    console.log('bool111',bool);
     dispatch({ type: SET_TOKEN_IS_SET, payload: bool });
+  }
 
   const auth = () => {
     spotifyApi.setAccessToken(state.token);

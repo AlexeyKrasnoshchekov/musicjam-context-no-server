@@ -5,7 +5,7 @@ import { getAccessToken, setUrl } from "../util/helpers";
 import { Button, Col, Row, Divider, Image } from "antd";
 
 export default function Login() {
-  const { setToken, setTokenIsSet, token } = useContext(context);
+  const { setToken, setTokenIsSet, token,tokenIsSet } = useContext(context);
   const [authUrlIsSet, setAuthUrlIsSet] = useState(false);
 
   const initialRender = useRef(true);
@@ -22,7 +22,9 @@ export default function Login() {
       console.log('first',tokenLocal);
       setToken(tokenLocal);
       localStorage.setItem("token", tokenLocal);
+      console.log('setTokenIsSet111',tokenIsSet);
       setTokenIsSet(true);
+      console.log('setTokenIsSet222',tokenIsSet);
     }
   }, [authUrlIsSet]);
 
