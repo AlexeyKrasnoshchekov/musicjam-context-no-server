@@ -25,7 +25,7 @@ export default function Login() {
       console.log('setTokenIsSet111',tokenIsSet);
       setTokenIsSet(true);
       console.log('setTokenIsSet222',tokenIsSet);
-      location = "https://musicjam2.vercel.app/";
+      window.location = "https://musicjam2.vercel.app/";
     }
   }, [authUrlIsSet]);
 

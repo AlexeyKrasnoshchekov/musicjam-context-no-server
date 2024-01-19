@@ -9,6 +9,8 @@ export default function Home() {
   const initialRender = useRef(true);
 
   useEffect(() => {
+
+    console.log('HOME');
     if (initialRender.current) {
       initialRender.current = false;
       return;
