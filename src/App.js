@@ -18,6 +18,7 @@ import Album from "./components/Album/Album";
 
 export default function App() {
   const { tokenIsSet } = useContext(context);
+  console.log('tokenIsSet',tokenIsSet)
 
   return (
     <Router>
